@@ -1,4 +1,4 @@
-// Copyright (C) 2020 Andrei Avram
+// Copyright (C) 2021 Andrei Avram
 
 #ifndef POLY_MAP_HPP_
 #define POLY_MAP_HPP_
