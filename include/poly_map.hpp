@@ -4,7 +4,6 @@
 #define POLY_MAP_HPP_
 
 #include <any>
-#include <cassert>
 #include <functional>
 #include <iostream>
 #include <map>
