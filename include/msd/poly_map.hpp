@@ -42,12 +42,6 @@ struct poly_map_item {
     }
 
     template <typename T>
-    [[nodiscard]] auto& at(const T& key) const
-    {
-        return items_.at(key);
-    }
-
-    template <typename T>
     auto& operator=(T&& v) noexcept
     {
         value_.value_ = std::forward<T>(v);
