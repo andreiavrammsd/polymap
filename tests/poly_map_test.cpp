@@ -116,6 +116,13 @@ TEST_F(PolyMapTest, for_each)
     EXPECT_TRUE(visitor.values[3].empty());
     EXPECT_EQ(visitor.values[4].get<int>(), 199);
     EXPECT_EQ((visitor.values[5].get<std::pair<int, int>>()), std::make_pair(1, 2));
+
+    auto const const_map = map;
+    auto const_visitor = functor_visitor{};
+    const_map.for_each(const_visitor);
+
+    EXPECT_EQ(const_visitor.keys.size(), 6);
+    EXPECT_EQ(const_visitor.values.size(), 6);
 }
 
 struct stop_visitor {
@@ -138,6 +145,13 @@ TEST_F(PolyMapTest, for_each_stop)
 
     EXPECT_EQ(visitor.key_count, 1);
     EXPECT_EQ(visitor.value_count, 1);
+
+    auto const const_map = map;
+    auto const_visitor = stop_visitor{};
+    const_map.for_each(const_visitor);
+
+    EXPECT_EQ(const_visitor.key_count, 1);
+    EXPECT_EQ(const_visitor.value_count, 1);
 }
 
 TEST_F(PolyMapTest, clear)

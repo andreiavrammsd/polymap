@@ -163,14 +163,7 @@ class poly_map {
     template <typename V>
     void for_each(V&& visitor) const
     {
-        for (auto& item : items_.items_) {
-            auto visit =
-                std::bind(std::ref(visitor), std::placeholders::_1, std::ref(item.second.value_), std::ref(items_));
-            if (!std::visit(visit, item.first)) {
-                return;
-            }
-        }
-        items_.for_each(std::forward<V>(visitor));
+        const_cast<poly_map*>(this)->for_each(std::forward<V>(visitor));
     }
 
    private:
