@@ -1,5 +1,7 @@
 # Poly map
 
+![build](https://github.com/andreiavrammsd/polymap/workflows/build/badge.svg)
+
 Polymorphic map container.
 
 A recursive map with infinite levels and multiple types for keys and values.
