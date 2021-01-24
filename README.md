@@ -7,7 +7,7 @@ A recursive map with infinite levels and multiple types for keys and values.
 ## Requirements
 
 * C++17
-* CMake 3.12+
+* CMake 3.17+
 
 ## Usage
 
