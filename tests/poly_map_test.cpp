@@ -80,6 +80,12 @@ TEST_F(PolyMapTest, at)
     EXPECT_THROW(const_map.at(999), std::out_of_range);
 }
 
+TEST_F(PolyMapTest, subscript)
+{
+    EXPECT_EQ(map[1].get<std::string>(), "a");
+    EXPECT_EQ(map[1][2][3.1]["f"].get<int>(), 199);
+}
+
 struct functor_visitor {
     std::vector<std::any> keys;
     std::vector<msd::value> values;
