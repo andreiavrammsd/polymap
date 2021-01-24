@@ -1,6 +1,6 @@
 # Poly map
 
-[![build](https://github.com/andreiavrammsd/polymap/actions)](https://github.com/andreiavrammsd/polymap/workflows/build/badge.svg)
+[![build](https://github.com/andreiavrammsd/polymap/workflows/build/badge.svg)](https://github.com/andreiavrammsd/polymap/actions)
 
 Polymorphic map container.
 
