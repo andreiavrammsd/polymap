@@ -73,7 +73,7 @@ class poly_map {
     void for_each(V&& visitor)
     {
         for (auto& item : items_.items_) {
-            auto visit =
+            const auto visit =
                 std::bind(std::ref(visitor), std::placeholders::_1, std::ref(item.second.value_), std::ref(items_));
             if (!std::visit(visit, item.first)) {
                 return;
@@ -240,8 +240,8 @@ struct poly_map<Keys...>::poly_map_item {
     {
         for (auto& item_ : items_) {
             for (auto& item : item_.second.items_) {
-                auto visit = std::bind(std::ref(visitor), std::placeholders::_1, std::ref(item.second.value_),
-                                       std::ref(item_.second.items_));
+                const auto visit = std::bind(std::ref(visitor), std::placeholders::_1, std::ref(item.second.value_),
+                                             std::ref(item_.second.items_));
                 if (!std::visit(visit, item.first)) {
                     return;
                 }
