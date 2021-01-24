@@ -16,27 +16,6 @@ class poly_map {
 
    public:
     /**
-     * Tests if map has no elements.
-     */
-    [[nodiscard]] bool empty() const noexcept { return items_.empty(); }
-
-    /**
-     * Unchecked access to map by key.
-     *
-     * @tparam T Type of key.
-     * @param key Key to index map by.
-     *
-     * @return Map at given key.
-     *
-     * @throws std::out_of_range if key not found.
-     */
-    template <typename T>
-    auto& operator[](const T& key)
-    {
-        return items_[key];
-    }
-
-    /**
      * Checked access to map by key.
      *
      * @tparam T Type of key.
@@ -69,21 +48,20 @@ class poly_map {
     }
 
     /**
-     * Tests if given path of keys is in map.
+     * Unchecked access to map by key.
      *
-     * @param key Key to search for.
-     * @param keys List of keys to search for.
+     * @tparam T Type of key.
+     * @param key Key to index map by.
+     *
+     * @return Map at given key.
+     *
+     * @throws std::out_of_range if key not found.
      */
-    template <typename T, typename... Ts>
-    [[nodiscard]] bool contains(const T& key, const Ts&... keys) const
+    template <typename T>
+    auto& operator[](const T& key)
     {
-        return items_.contains(key, keys...);
+        return items_[key];
     }
-
-    /**
-     * Removes elements from map.
-     */
-    void clear() noexcept { items_.items_.clear(); }
 
     /**
      * Iterate over map element by given visitor.
@@ -112,6 +90,28 @@ class poly_map {
     void for_each(V&& visitor) const
     {
         const_cast<poly_map*>(this)->for_each(std::forward<V>(visitor));
+    }
+
+    /**
+     * Tests if map has no elements.
+     */
+    [[nodiscard]] bool empty() const noexcept { return items_.empty(); }
+
+    /**
+     * Removes elements from map.
+     */
+    void clear() noexcept { items_.items_.clear(); }
+
+    /**
+     * Tests if given path of keys is in map.
+     *
+     * @param key Key to search for.
+     * @param keys List of keys to search for.
+     */
+    template <typename T, typename... Ts>
+    [[nodiscard]] bool contains(const T& key, const Ts&... keys) const
+    {
+        return items_.contains(key, keys...);
     }
 
    private:
@@ -162,24 +162,16 @@ struct poly_map<Keys...>::poly_map_item {
     value value_;
 
     /**
-     * Tests if map has no elements.
-     */
-    [[nodiscard]] bool empty() const noexcept { return items_.empty(); }
-
-    /**
-     * Unchecked access to map by key.
+     * Add value to map.
      *
-     * @tparam T Type of key.
-     * @param key Key to index map by.
-     *
-     * @return Map at given key.
-     *
-     * @throws std::out_of_range if key not found.
+     * @tparam T Type of value.
+     * @param v Value to add.
      */
     template <typename T>
-    auto& operator[](const T key)
+    auto& operator=(T&& v) noexcept
     {
-        return items_[key];
+        value_.value_ = std::forward<T>(v);
+        return *this;
     }
 
     /**
@@ -199,16 +191,19 @@ struct poly_map<Keys...>::poly_map_item {
     }
 
     /**
-     * Add value to map.
+     * Unchecked access to map by key.
      *
-     * @tparam T Type of value.
-     * @param v Value to add.
+     * @tparam T Type of key.
+     * @param key Key to index map by.
+     *
+     * @return Map at given key.
+     *
+     * @throws std::out_of_range if key not found.
      */
     template <typename T>
-    auto& operator=(T&& v) noexcept
+    auto& operator[](const T key)
     {
-        value_.value_ = std::forward<T>(v);
-        return *this;
+        return items_[key];
     }
 
     /**
@@ -225,37 +220,6 @@ struct poly_map<Keys...>::poly_map_item {
     {
         return value_.template get<T>();
     }
-
-    /**
-     * Tests if given key is in map.
-     *
-     * @param key Key to search for.
-     */
-    template <typename T>
-    [[nodiscard]] bool contains(const T& key) const
-    {
-        return items_.find(key) != items_.end();
-    }
-
-    /**
-     * Tests if given path of keys is in map.
-     *
-     * @param key Key to search for.
-     * @param keys List of keys to search for.
-     */
-    template <typename T, typename... Ts>
-    [[nodiscard]] bool contains(const T& key, const Ts&... keys) const
-    {
-        if (!contains(key)) {
-            return false;
-        }
-        return items_.at(key).contains(keys...);
-    }
-
-    /**
-     * Removes elements from map.
-     */
-    void clear() noexcept { items_.clear(); }
 
     /**
      * Iterate over map element by given visitor.
@@ -286,6 +250,42 @@ struct poly_map<Keys...>::poly_map_item {
     void for_each(V&& visitor) const
     {
         const_cast<poly_map_item*>(this)->for_each(std::forward<V>(visitor));
+    }
+
+    /**
+     * Tests if given key is in map.
+     *
+     * @param key Key to search for.
+     */
+    template <typename T>
+    [[nodiscard]] bool contains(const T& key) const
+    {
+        return items_.find(key) != items_.end();
+    }
+
+    /**
+     * Tests if map has no elements.
+     */
+    [[nodiscard]] bool empty() const noexcept { return items_.empty(); }
+
+    /**
+     * Removes elements from map.
+     */
+    void clear() noexcept { items_.clear(); }
+
+    /**
+     * Tests if given path of keys is in map.
+     *
+     * @param key Key to search for.
+     * @param keys List of keys to search for.
+     */
+    template <typename T, typename... Ts>
+    [[nodiscard]] bool contains(const T& key, const Ts&... keys) const
+    {
+        if (!contains(key)) {
+            return false;
+        }
+        return items_.at(key).contains(keys...);
     }
 };
 

@@ -25,57 +25,6 @@ class PolyMapTest : public ::testing::Test {
     }
 };
 
-TEST_F(PolyMapTest, contains)
-{
-    EXPECT_TRUE(map.contains(1));
-    EXPECT_TRUE(map.contains(1, 2));
-    EXPECT_TRUE(map.contains(1, 2, 3.1));
-    EXPECT_FALSE(map.contains(9));
-    EXPECT_FALSE(map.contains(1, 9));
-    EXPECT_FALSE(map.contains(1, 2, 3.1, 9));
-    EXPECT_FALSE(map.contains(1, 2, 3.1, 9));
-    EXPECT_FALSE(map.contains(2, 1));
-    EXPECT_FALSE(map.contains(3.1, 2, 1));
-    EXPECT_FALSE(map[1][2].contains(2));
-    EXPECT_TRUE(map[1][2].contains(3.1));
-    EXPECT_FALSE(map.at(1).at(2).contains(2));
-    EXPECT_TRUE(map.at(1).at(2).contains(3.1));
-
-    const auto const_map = map;
-    EXPECT_TRUE(const_map.contains(1));
-    EXPECT_FALSE(const_map.at(1).at(2).contains(2));
-}
-
-TEST_F(PolyMapTest, empty)
-{
-    EXPECT_FALSE(map.empty());
-    EXPECT_TRUE(map[1][2][3.1][4.2]["f"].empty());
-    EXPECT_FALSE(map[1][2][3.1][4.2].empty());
-    EXPECT_TRUE(map.at(1).at(2).at(3.1).at(4.2).at("f").empty());
-    EXPECT_FALSE(map.at(1).at(2).at(3.1).at(4.2).empty());
-
-    const auto const_map = map;
-    EXPECT_FALSE(const_map.empty());
-    EXPECT_TRUE(const_map.at(1).at(2).at(3.1).at(4.2).at("f").empty());
-    EXPECT_FALSE(const_map.at(1).at(2).at(3.1).at(4.2).empty());
-
-    msd::poly_map<int> empty_map;
-    EXPECT_TRUE(empty_map.empty());
-}
-
-TEST_F(PolyMapTest, get)
-{
-    EXPECT_EQ(map[1].get<std::string>(), "a");
-    EXPECT_FALSE(map[1].empty());
-    EXPECT_TRUE(map[99].empty());
-    EXPECT_EQ(map[1][2][3.1].get<int>(), 1);
-    EXPECT_EQ(map.at(1).at(2).at(3.1).get<int>(), 1);
-    EXPECT_THROW({ map[1] = map[1].get<int>(); }, std::bad_cast);
-
-    const auto const_map = map;
-    EXPECT_EQ(const_map.at(1).at(2).at(3.1).get<int>(), 1);
-}
-
 TEST_F(PolyMapTest, at)
 {
     EXPECT_EQ(map.at(1).get<std::string>(), "a");
@@ -96,6 +45,19 @@ TEST_F(PolyMapTest, subscript)
 {
     EXPECT_EQ(map[1].get<std::string>(), "a");
     EXPECT_EQ(map[1][2][3.1]["f"].get<int>(), 199);
+}
+
+TEST_F(PolyMapTest, get)
+{
+    EXPECT_EQ(map[1].get<std::string>(), "a");
+    EXPECT_FALSE(map[1].empty());
+    EXPECT_TRUE(map[99].empty());
+    EXPECT_EQ(map[1][2][3.1].get<int>(), 1);
+    EXPECT_EQ(map.at(1).at(2).at(3.1).get<int>(), 1);
+    EXPECT_THROW({ map[1] = map[1].get<int>(); }, std::bad_cast);
+
+    const auto const_map = map;
+    EXPECT_EQ(const_map.at(1).at(2).at(3.1).get<int>(), 1);
 }
 
 struct functor_visitor {
@@ -186,6 +148,23 @@ TEST_F(PolyMapTest, for_each_stop)
     EXPECT_EQ(const_visitor.value_count, 1);
 }
 
+TEST_F(PolyMapTest, empty)
+{
+    EXPECT_FALSE(map.empty());
+    EXPECT_TRUE(map[1][2][3.1][4.2]["f"].empty());
+    EXPECT_FALSE(map[1][2][3.1][4.2].empty());
+    EXPECT_TRUE(map.at(1).at(2).at(3.1).at(4.2).at("f").empty());
+    EXPECT_FALSE(map.at(1).at(2).at(3.1).at(4.2).empty());
+
+    const auto const_map = map;
+    EXPECT_FALSE(const_map.empty());
+    EXPECT_TRUE(const_map.at(1).at(2).at(3.1).at(4.2).at("f").empty());
+    EXPECT_FALSE(const_map.at(1).at(2).at(3.1).at(4.2).empty());
+
+    msd::poly_map<int> empty_map;
+    EXPECT_TRUE(empty_map.empty());
+}
+
 TEST_F(PolyMapTest, clear)
 {
     EXPECT_TRUE(map.contains(1, 2));
@@ -195,4 +174,25 @@ TEST_F(PolyMapTest, clear)
     EXPECT_TRUE(map.contains(1));
     map.clear();
     EXPECT_FALSE(map.contains(1));
+}
+
+TEST_F(PolyMapTest, contains)
+{
+    EXPECT_TRUE(map.contains(1));
+    EXPECT_TRUE(map.contains(1, 2));
+    EXPECT_TRUE(map.contains(1, 2, 3.1));
+    EXPECT_FALSE(map.contains(9));
+    EXPECT_FALSE(map.contains(1, 9));
+    EXPECT_FALSE(map.contains(1, 2, 3.1, 9));
+    EXPECT_FALSE(map.contains(1, 2, 3.1, 9));
+    EXPECT_FALSE(map.contains(2, 1));
+    EXPECT_FALSE(map.contains(3.1, 2, 1));
+    EXPECT_FALSE(map[1][2].contains(2));
+    EXPECT_TRUE(map[1][2].contains(3.1));
+    EXPECT_FALSE(map.at(1).at(2).contains(2));
+    EXPECT_TRUE(map.at(1).at(2).contains(3.1));
+
+    const auto const_map = map;
+    EXPECT_TRUE(const_map.contains(1));
+    EXPECT_FALSE(const_map.at(1).at(2).contains(2));
 }
