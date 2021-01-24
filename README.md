@@ -12,6 +12,7 @@ A recursive map with infinite levels and multiple types for keys and values.
 ## Usage
 
 ```c++
+#include <cassert>
 #include <iostream>
 
 #include "msd/poly_map.hpp"
@@ -37,7 +38,11 @@ int main() {
     map[1][2][3.1]["f"] = 199;
     map[1][2][3.1][4.2]["g"] = std::make_pair(1, 2);
 
+    assert(map.contains(1, 2, 3.1));
+
     map.for_each(visitor{});
+
+    map.clear();
 }
 ```
 
