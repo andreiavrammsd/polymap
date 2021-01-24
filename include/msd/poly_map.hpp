@@ -137,7 +137,7 @@ class poly_map {
     template <typename T>
     [[nodiscard]] auto& at(const T& key) const
     {
-        return items_.template at(key);
+        return const_cast<poly_map*>(this)->at(key);
     }
 
     template <typename T, typename... Ts>
