@@ -1,4 +1,4 @@
-#include "poly_map.hpp"
+#include "msd/poly_map.hpp"
 
 #include <any>
 #include <limits>
@@ -10,8 +10,7 @@
 
 class PolyMapTest : public ::testing::Test {
    protected:
-    using poly_map_test = poly_map<int, double, std::string>;
-    poly_map_test map;
+    msd::poly_map<int, double, std::string> map;
 
     void SetUp() override
     {
@@ -68,7 +67,7 @@ TEST_F(PolyMapTest, at)
 
 struct functor_visitor {
     std::vector<std::any> keys;
-    std::vector<value> values;
+    std::vector<msd::value> values;
 
     template <typename V, typename M>
     bool operator()(double key, V& value, M&)

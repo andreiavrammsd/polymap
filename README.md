@@ -14,7 +14,7 @@ A recursive map with infinite levels and multiple types for keys and values.
 ```c++
 #include <iostream>
 
-#include "poly_map.hpp"
+#include "msd/poly_map.hpp"
 
 struct visitor {
     template <typename K, typename V, typename M>
@@ -26,7 +26,7 @@ struct visitor {
 };
 
 int main() {
-    poly_map<int, double, std::string> map;
+    msd::poly_map<int, double, std::string> map;
 
     map[1] = 22;
     map.at(1) = 23;

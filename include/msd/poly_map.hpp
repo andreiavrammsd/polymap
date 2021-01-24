@@ -1,12 +1,14 @@
 // Copyright (C) 2021 Andrei Avram
 
-#ifndef POLY_MAP_HPP_
-#define POLY_MAP_HPP_
+#ifndef MSD_POLY_MAP_HPP_
+#define MSD_POLY_MAP_HPP_
 
 #include <any>
 #include <functional>
 #include <map>
 #include <variant>
+
+namespace msd {
 
 struct value {
     std::any value_;
@@ -169,4 +171,6 @@ class poly_map {
     poly_map_item<Keys...> items_;
 };
 
-#endif  // POLY_MAP_HPP_
+}  // namespace msd
+
+#endif  // MSD_POLY_MAP_HPP_
