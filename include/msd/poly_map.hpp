@@ -79,6 +79,7 @@ class poly_map {
                 return;
             }
         }
+
         items_.for_each(std::forward<V>(visitor));
     }
 
@@ -178,6 +179,7 @@ struct poly_map<Keys...>::poly_map_item {
     auto& operator=(T&& v)
     {
         value_.value_ = std::forward<T>(v);
+
         return *this;
     }
 
@@ -244,6 +246,7 @@ struct poly_map<Keys...>::poly_map_item {
                     return;
                 }
             }
+
             item_.second.for_each(std::forward<V>(visitor));
         }
     }
@@ -306,6 +309,7 @@ struct poly_map<Keys...>::poly_map_item {
         if (!contains(key)) {
             return false;
         }
+
         return items_.at(key).contains(keys...);
     }
 };
