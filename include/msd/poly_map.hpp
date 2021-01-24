@@ -74,7 +74,7 @@ struct poly_map_item {
     template <typename T, typename... Ts>
     [[nodiscard]] bool contains(const T& key, const Ts&... keys) const
     {
-        if (items_.find(key) == items_.end()) {
+        if (!contains(key)) {
             return false;
         }
         return items_.at(key).contains(keys...);
