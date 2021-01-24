@@ -48,14 +48,19 @@ TEST_F(PolyMapTest, contains)
 
 TEST_F(PolyMapTest, empty)
 {
+    EXPECT_FALSE(map.empty());
     EXPECT_TRUE(map[1][2][3.1][4.2]["f"].empty());
     EXPECT_FALSE(map[1][2][3.1][4.2].empty());
     EXPECT_TRUE(map.at(1).at(2).at(3.1).at(4.2).at("f").empty());
     EXPECT_FALSE(map.at(1).at(2).at(3.1).at(4.2).empty());
 
     const auto const_map = map;
+    EXPECT_FALSE(const_map.empty());
     EXPECT_TRUE(const_map.at(1).at(2).at(3.1).at(4.2).at("f").empty());
     EXPECT_FALSE(const_map.at(1).at(2).at(3.1).at(4.2).empty());
+
+    msd::poly_map<int> empty_map;
+    EXPECT_TRUE(empty_map.empty());
 }
 
 TEST_F(PolyMapTest, get)
