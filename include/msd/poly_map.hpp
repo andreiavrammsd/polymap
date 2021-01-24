@@ -162,13 +162,14 @@ struct poly_map<Keys...>::poly_map_item {
     value value_;
 
     /**
-     * Add value to map.
+     * Assign value to map.
      *
-     * @tparam T Type of value.
      * @param v Value to add.
+     *
+     * @throws std::bad_alloc or the exception thrown by the assigned value's constructor.
      */
     template <typename T>
-    auto& operator=(T&& v) noexcept
+    auto& operator=(T&& v)
     {
         value_.value_ = std::forward<T>(v);
         return *this;
