@@ -54,6 +54,9 @@ int main() {
 
     assert(!map[1].empty());
 
+    assert(map.size() == 6);
+    assert(map[1].size() == 5);
+
     assert(map.contains(1, 2, 3.1));
 
     map[1][2].clear();

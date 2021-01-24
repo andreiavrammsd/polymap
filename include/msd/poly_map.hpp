@@ -4,6 +4,7 @@
 #define MSD_POLY_MAP_HPP_
 
 #include <any>
+#include <cstdlib>
 #include <functional>
 #include <map>
 #include <variant>
@@ -96,6 +97,11 @@ class poly_map {
      * Tests if map has no elements.
      */
     [[nodiscard]] bool empty() const noexcept { return items_.empty(); }
+
+    /**
+     * Returns number of elements.
+     */
+    [[nodiscard]] std::size_t size() const noexcept { return items_.size(); }
 
     /**
      * Removes elements from map.
@@ -257,6 +263,20 @@ struct poly_map<Keys...>::poly_map_item {
      * Tests if map has no elements.
      */
     [[nodiscard]] bool empty() const noexcept { return items_.empty(); }
+
+    /**
+     * Returns number of elements.
+     */
+    [[nodiscard]] std::size_t size() const noexcept
+    {
+        std::size_t sz = items_.size();
+
+        for (auto& item : items_) {
+            sz += item.second.size();
+        }
+
+        return sz;
+    }
 
     /**
      * Removes elements from map.

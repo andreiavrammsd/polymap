@@ -206,6 +206,20 @@ TEST_F(PolyMapTest, empty)
     EXPECT_TRUE(empty_map.empty());
 }
 
+TEST_F(PolyMapTest, size)
+{
+    EXPECT_EQ(map.size(), 6);
+    EXPECT_EQ(const_map.size(), 6);
+    EXPECT_EQ(map[999].size(), 0);
+
+    EXPECT_EQ(map[1][2][3.1].size(), 3);
+    EXPECT_EQ(const_map.at(1).at(2).at(3.1).size(), 3);
+    EXPECT_EQ(map.at(999).size(), 0);
+
+    msd::poly_map<int> empty_map;
+    EXPECT_EQ(empty_map.size(), 0);
+}
+
 TEST_F(PolyMapTest, clear)
 {
     EXPECT_TRUE(map.contains(1, 2));
