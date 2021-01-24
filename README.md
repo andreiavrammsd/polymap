@@ -18,10 +18,17 @@ A recursive map with infinite levels and multiple types for keys and values.
 #include "msd/poly_map.hpp"
 
 struct visitor {
+    template <typename V, typename M>
+    auto operator()(const double key, V&, M&)
+    {
+        std::cout << "double = " << key << "\n";
+        return true;
+    }
+
     template <typename K, typename V, typename M>
     auto operator()(K& key, V&, M&)
     {
-        std::cout << key << "\n";
+        std::cout << "other = " << key << "\n";
         return true;
     }
 };
@@ -38,10 +45,15 @@ int main() {
     map[1][2][3.1]["f"] = 199;
     map[1][2][3.1][4.2]["g"] = std::make_pair(1, 2);
 
-    assert(map.contains(1, 2, 3.1));
+    assert(map[1][2].get<int>() == 8);
 
     map.for_each(visitor{});
 
+    assert(!map[1].empty());
+
+    assert(map.contains(1, 2, 3.1));
+
+    map[1][2].clear();
     map.clear();
 }
 ```
