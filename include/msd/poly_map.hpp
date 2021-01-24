@@ -253,6 +253,16 @@ struct poly_map<Keys...>::poly_map_item {
     }
 
     /**
+     * Tests if map has no elements.
+     */
+    [[nodiscard]] bool empty() const noexcept { return items_.empty(); }
+
+    /**
+     * Removes elements from map.
+     */
+    void clear() noexcept { items_.clear(); }
+
+    /**
      * Tests if given key is in map.
      *
      * @param key Key to search for.
@@ -262,16 +272,6 @@ struct poly_map<Keys...>::poly_map_item {
     {
         return items_.find(key) != items_.end();
     }
-
-    /**
-     * Tests if map has no elements.
-     */
-    [[nodiscard]] bool empty() const noexcept { return items_.empty(); }
-
-    /**
-     * Removes elements from map.
-     */
-    void clear() noexcept { items_.clear(); }
 
     /**
      * Tests if given path of keys is in map.
