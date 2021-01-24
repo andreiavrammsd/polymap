@@ -66,17 +66,6 @@ struct poly_map_item {
     }
 
     template <typename T>
-    [[nodiscard]] auto operator()() const
-    {
-        try {
-            return std::any_cast<T>(value_.value_);
-        }
-        catch (const std::bad_any_cast&) {
-            throw std::bad_cast{};
-        }
-    }
-
-    template <typename T>
     [[nodiscard]] bool contains(const T& key) const
     {
         return items_.find(key) != items_.end();
