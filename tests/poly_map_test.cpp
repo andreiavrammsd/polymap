@@ -40,6 +40,10 @@ TEST_F(PolyMapTest, contains)
     EXPECT_TRUE(map[1][2].contains(3.1));
     EXPECT_FALSE(map.at(1).at(2).contains(2));
     EXPECT_TRUE(map.at(1).at(2).contains(3.1));
+
+    const auto const_map = map;
+    EXPECT_TRUE(const_map.contains(1));
+    EXPECT_FALSE(const_map.at(1).at(2).contains(2));
 }
 
 TEST_F(PolyMapTest, empty)
@@ -48,6 +52,10 @@ TEST_F(PolyMapTest, empty)
     EXPECT_FALSE(map[1][2][3.1][4.2].empty());
     EXPECT_TRUE(map.at(1).at(2).at(3.1).at(4.2).at("f").empty());
     EXPECT_FALSE(map.at(1).at(2).at(3.1).at(4.2).empty());
+
+    const auto const_map = map;
+    EXPECT_TRUE(const_map.at(1).at(2).at(3.1).at(4.2).at("f").empty());
+    EXPECT_FALSE(const_map.at(1).at(2).at(3.1).at(4.2).empty());
 }
 
 TEST_F(PolyMapTest, get)
@@ -57,12 +65,19 @@ TEST_F(PolyMapTest, get)
     EXPECT_TRUE(map[99].empty());
     EXPECT_EQ(map[1][2][3.1].get<int>(), 1);
     EXPECT_EQ(map.at(1).at(2).at(3.1).get<int>(), 1);
+
+    const auto const_map = map;
+    EXPECT_EQ(const_map.at(1).at(2).at(3.1).get<int>(), 1);
 }
 
 TEST_F(PolyMapTest, at)
 {
     EXPECT_EQ(map.at(1).get<std::string>(), "a");
     EXPECT_THROW(map.at(999), std::out_of_range);
+
+    const auto const_map = map;
+    EXPECT_EQ(const_map.at(1).get<std::string>(), "a");
+    EXPECT_THROW(const_map.at(999), std::out_of_range);
 }
 
 struct functor_visitor {
