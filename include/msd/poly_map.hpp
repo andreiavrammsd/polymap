@@ -236,15 +236,15 @@ struct poly_map<Keys...>::poly_map_item {
     template <typename V>
     void for_each(V&& visitor)
     {
-        for (auto& it : items_) {
-            for (auto& item : it.second.items_) {
+        for (auto& item_ : items_) {
+            for (auto& item : item_.second.items_) {
                 auto visit = std::bind(std::ref(visitor), std::placeholders::_1, std::ref(item.second.value_),
-                                       std::ref(it.second.items_));
+                                       std::ref(item_.second.items_));
                 if (!std::visit(visit, item.first)) {
                     return;
                 }
             }
-            it.second.for_each(std::forward<V>(visitor));
+            item_.second.for_each(std::forward<V>(visitor));
         }
     }
 
