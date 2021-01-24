@@ -10,6 +10,115 @@
 
 namespace msd {
 
+template <typename... Keys>
+class poly_map {
+    static_assert(sizeof...(Keys) > 0, "No key type provided");
+
+   public:
+    /**
+     * Tests if map has no elements.
+     */
+    [[nodiscard]] bool empty() const noexcept { return items_.empty(); }
+
+    /**
+     * Unchecked access to map by key.
+     *
+     * @tparam T Type of key.
+     * @param key Key to index map by.
+     *
+     * @return Map at given key.
+     *
+     * @throws std::out_of_range if key not found.
+     */
+    template <typename T>
+    auto& operator[](const T& key)
+    {
+        return items_[key];
+    }
+
+    /**
+     * Checked access to map by key.
+     *
+     * @tparam T Type of key.
+     * @param key Key to index map by.
+     *
+     * @return Map at given key.
+     *
+     * @throws std::out_of_range if key not found.
+     */
+    template <typename T>
+    [[nodiscard]] auto& at(const T& key)
+    {
+        return items_.template at(key);
+    }
+
+    /**
+     * Checked access to map by key. Const overload.
+     *
+     * @tparam T Type of key.
+     * @param key Key to index map by.
+     *
+     * @return Map at given key.
+     *
+     * @throws std::out_of_range if key not found.
+     */
+    template <typename T>
+    [[nodiscard]] auto& at(const T& key) const
+    {
+        return const_cast<poly_map*>(this)->at(key);
+    }
+
+    /**
+     * Tests if given path of keys is in map.
+     *
+     * @param key Key to search for.
+     * @param keys List of keys to search for.
+     */
+    template <typename T, typename... Ts>
+    [[nodiscard]] bool contains(const T& key, const Ts&... keys) const
+    {
+        return items_.contains(key, keys...);
+    }
+
+    /**
+     * Removes elements from map.
+     */
+    void clear() noexcept { items_.items_.clear(); }
+
+    /**
+     * Iterate over map element by given visitor.
+     *
+     * @param visitor Visitor with overloads for keys types.
+     */
+    template <typename V>
+    void for_each(V&& visitor)
+    {
+        for (auto& item : items_.items_) {
+            auto visit =
+                std::bind(std::ref(visitor), std::placeholders::_1, std::ref(item.second.value_), std::ref(items_));
+            if (!std::visit(visit, item.first)) {
+                return;
+            }
+        }
+        items_.for_each(std::forward<V>(visitor));
+    }
+
+    /**
+     * Iterate over map element by given visitor. Const overload.
+     *
+     * @param visitor Visitor with overloads for keys types.
+     */
+    template <typename V>
+    void for_each(V&& visitor) const
+    {
+        const_cast<poly_map*>(this)->for_each(std::forward<V>(visitor));
+    }
+
+   private:
+    struct poly_map_item;
+    poly_map_item items_;
+};
+
 /**
  * Map value
  */
@@ -48,7 +157,7 @@ struct value {
  * @tparam Keys Types of keys.
  */
 template <typename... Keys>
-struct poly_map_item {
+struct poly_map<Keys...>::poly_map_item {
     std::map<std::variant<Keys...>, poly_map_item> items_;
     value value_;
 
@@ -178,114 +287,6 @@ struct poly_map_item {
     {
         const_cast<poly_map_item*>(this)->for_each(std::forward<V>(visitor));
     }
-};
-
-template <typename... Keys>
-class poly_map {
-    static_assert(sizeof...(Keys) > 0, "No key type provided");
-
-   public:
-    /**
-     * Tests if map has no elements.
-     */
-    [[nodiscard]] bool empty() const noexcept { return items_.empty(); }
-
-    /**
-     * Unchecked access to map by key.
-     *
-     * @tparam T Type of key.
-     * @param key Key to index map by.
-     *
-     * @return Map at given key.
-     *
-     * @throws std::out_of_range if key not found.
-     */
-    template <typename T>
-    auto& operator[](const T& key)
-    {
-        return items_[key];
-    }
-
-    /**
-     * Checked access to map by key.
-     *
-     * @tparam T Type of key.
-     * @param key Key to index map by.
-     *
-     * @return Map at given key.
-     *
-     * @throws std::out_of_range if key not found.
-     */
-    template <typename T>
-    [[nodiscard]] auto& at(const T& key)
-    {
-        return items_.template at(key);
-    }
-
-    /**
-     * Checked access to map by key. Const overload.
-     *
-     * @tparam T Type of key.
-     * @param key Key to index map by.
-     *
-     * @return Map at given key.
-     *
-     * @throws std::out_of_range if key not found.
-     */
-    template <typename T>
-    [[nodiscard]] auto& at(const T& key) const
-    {
-        return const_cast<poly_map*>(this)->at(key);
-    }
-
-    /**
-     * Tests if given path of keys is in map.
-     *
-     * @param key Key to search for.
-     * @param keys List of keys to search for.
-     */
-    template <typename T, typename... Ts>
-    [[nodiscard]] bool contains(const T& key, const Ts&... keys) const
-    {
-        return items_.contains(key, keys...);
-    }
-
-    /**
-     * Removes elements from map.
-     */
-    void clear() noexcept { items_.items_.clear(); }
-
-    /**
-     * Iterate over map element by given visitor.
-     *
-     * @param visitor Visitor with overloads for keys types.
-     */
-    template <typename V>
-    void for_each(V&& visitor)
-    {
-        for (auto& item : items_.items_) {
-            auto visit =
-                std::bind(std::ref(visitor), std::placeholders::_1, std::ref(item.second.value_), std::ref(items_));
-            if (!std::visit(visit, item.first)) {
-                return;
-            }
-        }
-        items_.for_each(std::forward<V>(visitor));
-    }
-
-    /**
-     * Iterate over map element by given visitor. Const overload.
-     *
-     * @param visitor Visitor with overloads for keys types.
-     */
-    template <typename V>
-    void for_each(V&& visitor) const
-    {
-        const_cast<poly_map*>(this)->for_each(std::forward<V>(visitor));
-    }
-
-   private:
-    poly_map_item<Keys...> items_;
 };
 
 }  // namespace msd
