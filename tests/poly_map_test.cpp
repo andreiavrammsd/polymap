@@ -145,6 +145,44 @@ TEST_F(PolyMapTest, for_each_stop)
     EXPECT_EQ(const_visitor.value_count, 1);
 }
 
+struct passed_map_visitor {
+    const msd::poly_map<int, double, std::string>& test_map;
+
+    template <typename V, typename M>
+    bool operator()(const std::string& key, V&, M& map)
+    {
+        if (key == "f") {
+            auto passed_map_ptr = static_cast<void*>(&map);
+            auto test_map_ptr = static_cast<void*>(&test_map.at(1).at(2).at(3.1));
+            EXPECT_EQ(passed_map_ptr, test_map_ptr);
+
+            auto passed_map_value = map[key].template get<int>();
+            auto test_map_value = test_map.at(1).at(2).at(3.1).at(key).get<int>();
+            EXPECT_EQ(passed_map_value, test_map_value);
+        }
+
+        if (key == "g") {
+            auto passed_map_ptr = static_cast<void*>(&map);
+            auto test_map_ptr = static_cast<void*>(&test_map.at(1).at(2).at(3.1).at(4.2));
+            EXPECT_EQ(passed_map_ptr, test_map_ptr);
+
+            auto passed_map_value = map[key].template get<std::pair<int, int>>();
+            auto test_map_value = test_map.at(1).at(2).at(3.1).at(4.2).at(key).get<std::pair<int, int>>();
+            EXPECT_EQ(passed_map_value, test_map_value);
+        }
+
+        return true;
+    }
+
+    template <typename K, typename V, typename M>
+    bool operator()(K&, V&, M&)
+    {
+        return true;
+    }
+};
+
+TEST_F(PolyMapTest, for_each_map_passed_to_visitor) { map[1][2].for_each(passed_map_visitor{map}); }
+
 struct child_visitor {
     std::vector<std::any>& keys;
 
