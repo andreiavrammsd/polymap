@@ -14,6 +14,7 @@ A recursive map with infinite levels and multiple types for keys and values.
 ```c++
 #include <cassert>
 #include <iostream>
+#include <string>
 
 #include "msd/poly_map.hpp"
 
