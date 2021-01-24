@@ -5,7 +5,6 @@
 
 #include <any>
 #include <cstdlib>
-#include <functional>
 #include <map>
 #include <variant>
 
@@ -73,8 +72,8 @@ class poly_map {
     void for_each(V&& visitor)
     {
         for (auto& item : items_.items_) {
-            const auto visit =
-                std::bind(std::ref(visitor), std::placeholders::_1, std::ref(item.second.value_), std::ref(items_));
+            const auto visit = [this, &visitor, &item](auto& key) { return visitor(key, item.second.value_, items_); };
+
             if (!std::visit(visit, item.first)) {
                 return;
             }
@@ -240,8 +239,10 @@ struct poly_map<Keys...>::poly_map_item {
     {
         for (auto& item_ : items_) {
             for (auto& item : item_.second.items_) {
-                const auto visit = std::bind(std::ref(visitor), std::placeholders::_1, std::ref(item.second.value_),
-                                             std::ref(item_.second.items_));
+                const auto visit = [&visitor, &item, &item_](auto& key) {
+                    return visitor(key, item.second.value_, item_.second.items_);
+                };
+
                 if (!std::visit(visit, item.first)) {
                     return;
                 }
