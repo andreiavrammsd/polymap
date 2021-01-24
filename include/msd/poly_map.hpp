@@ -52,7 +52,7 @@ struct poly_map_item {
     [[nodiscard]] auto get() const
     {
         try {
-            return std::any_cast<T>(value_.value_);
+            return value_.template get<T>();
         }
         catch (const std::bad_any_cast&) {
             throw std::bad_cast{};
