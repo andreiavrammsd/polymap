@@ -59,7 +59,7 @@ TEST_F(PolyMapTest, get)
     EXPECT_EQ(const_map.at(1).at(2).at(3.1).get<int>(), 1);
 }
 
-struct functor_visitor {
+struct map_visitor {
     std::vector<std::any> keys;
     std::vector<msd::value> values;
 
@@ -90,7 +90,7 @@ struct functor_visitor {
 
 TEST_F(PolyMapTest, for_each)
 {
-    auto visitor = functor_visitor{};
+    auto visitor = map_visitor{};
     map.for_each(visitor);
 
     auto eps = std::numeric_limits<double>::epsilon();
@@ -110,7 +110,7 @@ TEST_F(PolyMapTest, for_each)
     EXPECT_EQ(visitor.values[4].get<int>(), 199);
     EXPECT_EQ((visitor.values[5].get<std::pair<int, int>>()), std::make_pair(1, 2));
 
-    auto const_visitor = functor_visitor{};
+    auto const_visitor = map_visitor{};
     const_map.for_each(const_visitor);
 
     EXPECT_EQ(const_visitor.keys.size(), 6);
