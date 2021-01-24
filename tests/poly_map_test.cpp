@@ -38,7 +38,7 @@ TEST_F(PolyMapTest, contains)
     EXPECT_FALSE(map.contains(3.1, 2, 1));
     EXPECT_FALSE(map[1][2].contains(2));
     EXPECT_TRUE(map[1][2].contains(3.1));
-    EXPECT_FALSE(map.at(1).at(2).contains(2));
+    EXPECT_FALSE(map.at(2221).at(2).contains(2));
     EXPECT_TRUE(map.at(1).at(2).contains(3.1));
 
     const auto const_map = map;
