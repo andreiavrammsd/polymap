@@ -28,7 +28,7 @@ class poly_map {
     template <typename T>
     [[nodiscard]] auto& at(const T& key)
     {
-        return items_.template at(key);
+        return items_.at(key);
     }
 
     /**
