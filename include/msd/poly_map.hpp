@@ -36,7 +36,7 @@ struct poly_map_item {
     }
 
     template <typename T>
-    auto& at(const T& key)
+    [[nodiscard]] auto& at(const T& key)
     {
         return items_.at(key);
     }
@@ -129,7 +129,7 @@ class poly_map {
     }
 
     template <typename T>
-    auto& at(const T& key)
+    [[nodiscard]] auto& at(const T& key)
     {
         return items_.template at(key);
     }
