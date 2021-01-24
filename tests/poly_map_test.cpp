@@ -148,6 +148,37 @@ TEST_F(PolyMapTest, for_each_stop)
     EXPECT_EQ(const_visitor.value_count, 1);
 }
 
+struct child_visitor {
+    std::vector<std::any>& keys;
+
+    template <typename K, typename V, typename M>
+    auto operator()(const K& key, V&, M&)
+    {
+        keys.emplace_back(key);
+        return true;
+    }
+};
+
+TEST_F(PolyMapTest, for_each_child)
+{
+    std::vector<std::any> keys;
+
+    map[1][2][3.1].for_each(child_visitor{keys});
+    EXPECT_EQ(keys.size(), 1);
+    EXPECT_EQ(std::any_cast<std::string>(keys[0]), "g");
+
+    keys.clear();
+    map.at(1).at(2).at(3.1).for_each(child_visitor{keys});
+    EXPECT_EQ(keys.size(), 1);
+    EXPECT_EQ(std::any_cast<std::string>(keys[0]), "g");
+
+    keys.clear();
+    const auto const_map = map;
+    const_map.at(1).at(2).at(3.1).for_each(child_visitor{keys});
+    EXPECT_EQ(keys.size(), 1);
+    EXPECT_EQ(std::any_cast<std::string>(keys[0]), "g");
+}
+
 TEST_F(PolyMapTest, empty)
 {
     EXPECT_FALSE(map.empty());
