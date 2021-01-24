@@ -11,6 +11,7 @@
 class PolyMapTest : public ::testing::Test {
    protected:
     msd::poly_map<int, double, std::string> map;
+    const msd::poly_map<int, double, std::string>& const_map = map;
 
     void SetUp() override
     {
@@ -33,7 +34,6 @@ TEST_F(PolyMapTest, at)
     EXPECT_EQ(map.at(1).at(2).get<int>(), 8);
     EXPECT_THROW(map.at(1).at(2).at(8), std::out_of_range);
 
-    const auto const_map = map;
     EXPECT_EQ(const_map.at(1).get<std::string>(), "a");
     EXPECT_THROW(const_map.at(999), std::out_of_range);
 
@@ -56,7 +56,6 @@ TEST_F(PolyMapTest, get)
     EXPECT_EQ(map.at(1).at(2).at(3.1).get<int>(), 1);
     EXPECT_THROW({ map[1] = map[1].get<int>(); }, std::bad_cast);
 
-    const auto const_map = map;
     EXPECT_EQ(const_map.at(1).at(2).at(3.1).get<int>(), 1);
 }
 
@@ -111,7 +110,6 @@ TEST_F(PolyMapTest, for_each)
     EXPECT_EQ(visitor.values[4].get<int>(), 199);
     EXPECT_EQ((visitor.values[5].get<std::pair<int, int>>()), std::make_pair(1, 2));
 
-    auto const const_map = map;
     auto const_visitor = functor_visitor{};
     const_map.for_each(const_visitor);
 
@@ -140,7 +138,6 @@ TEST_F(PolyMapTest, for_each_stop)
     EXPECT_EQ(visitor.key_count, 1);
     EXPECT_EQ(visitor.value_count, 1);
 
-    auto const const_map = map;
     auto const_visitor = stop_visitor{};
     const_map.for_each(const_visitor);
 
@@ -173,7 +170,6 @@ TEST_F(PolyMapTest, for_each_child)
     EXPECT_EQ(std::any_cast<std::string>(keys[0]), "g");
 
     keys.clear();
-    const auto const_map = map;
     const_map.at(1).at(2).at(3.1).for_each(child_visitor{keys});
     EXPECT_EQ(keys.size(), 1);
     EXPECT_EQ(std::any_cast<std::string>(keys[0]), "g");
@@ -187,7 +183,6 @@ TEST_F(PolyMapTest, for_each_stop_child)
     EXPECT_EQ(visitor.key_count, 1);
     EXPECT_EQ(visitor.value_count, 1);
 
-    auto const const_map = map[1];
     auto const_visitor = stop_visitor{};
     const_map.for_each(const_visitor);
 
@@ -203,7 +198,6 @@ TEST_F(PolyMapTest, empty)
     EXPECT_TRUE(map.at(1).at(2).at(3.1).at(4.2).at("f").empty());
     EXPECT_FALSE(map.at(1).at(2).at(3.1).at(4.2).empty());
 
-    const auto const_map = map;
     EXPECT_FALSE(const_map.empty());
     EXPECT_TRUE(const_map.at(1).at(2).at(3.1).at(4.2).at("f").empty());
     EXPECT_FALSE(const_map.at(1).at(2).at(3.1).at(4.2).empty());
@@ -239,7 +233,6 @@ TEST_F(PolyMapTest, contains)
     EXPECT_FALSE(map.at(1).at(2).contains(2));
     EXPECT_TRUE(map.at(1).at(2).contains(3.1));
 
-    const auto const_map = map;
     EXPECT_TRUE(const_map.contains(1));
     EXPECT_FALSE(const_map.at(1).at(2).contains(2));
 }
