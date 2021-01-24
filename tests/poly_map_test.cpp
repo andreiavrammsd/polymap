@@ -80,9 +80,15 @@ TEST_F(PolyMapTest, at)
     EXPECT_EQ(map.at(1).get<std::string>(), "a");
     EXPECT_THROW(map.at(999), std::out_of_range);
 
+    EXPECT_EQ(map.at(1).at(2).get<int>(), 8);
+    EXPECT_THROW(map.at(1).at(2).at(8), std::out_of_range);
+
     const auto const_map = map;
     EXPECT_EQ(const_map.at(1).get<std::string>(), "a");
     EXPECT_THROW(const_map.at(999), std::out_of_range);
+
+    EXPECT_EQ(const_map.at(1).at(2).get<int>(), 8);
+    EXPECT_THROW(const_map.at(1).at(2).at(8), std::out_of_range);
 }
 
 TEST_F(PolyMapTest, subscript)
