@@ -27,7 +27,7 @@ class PolyMapTest : public ::testing::Test {
 
 TEST_F(PolyMapTest, contains)
 {
-    EXPECT_TRUE(map.contains(1));
+    EXPECT_TRUE(map.contains(12));
     EXPECT_TRUE(map.contains(1, 2));
     EXPECT_TRUE(map.contains(1, 2, 3.1));
     EXPECT_FALSE(map.contains(9));
