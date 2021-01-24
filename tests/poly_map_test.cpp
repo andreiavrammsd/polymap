@@ -70,6 +70,7 @@ TEST_F(PolyMapTest, get)
     EXPECT_TRUE(map[99].empty());
     EXPECT_EQ(map[1][2][3.1].get<int>(), 1);
     EXPECT_EQ(map.at(1).at(2).at(3.1).get<int>(), 1);
+    EXPECT_THROW({ map[1] = map[1].get<int>(); }, std::bad_cast);
 
     const auto const_map = map;
     EXPECT_EQ(const_map.at(1).at(2).at(3.1).get<int>(), 1);

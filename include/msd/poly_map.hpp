@@ -16,7 +16,12 @@ struct value {
     template <typename T>
     [[nodiscard]] auto get() const
     {
-        return std::any_cast<T>(value_);
+        try {
+            return std::any_cast<T>(value_);
+        }
+        catch (const std::bad_any_cast&) {
+            throw std::bad_cast{};
+        }
     }
 
     [[nodiscard]] bool empty() const noexcept { return !value_.has_value(); }
@@ -51,12 +56,7 @@ struct poly_map_item {
     template <typename T>
     [[nodiscard]] auto get() const
     {
-        try {
-            return value_.template get<T>();
-        }
-        catch (const std::bad_any_cast&) {
-            throw std::bad_cast{};
-        }
+        return value_.template get<T>();
     }
 
     template <typename T>
