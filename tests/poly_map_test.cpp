@@ -179,6 +179,22 @@ TEST_F(PolyMapTest, for_each_child)
     EXPECT_EQ(std::any_cast<std::string>(keys[0]), "g");
 }
 
+TEST_F(PolyMapTest, for_each_stop_child)
+{
+    auto visitor = stop_visitor{};
+    map[1].for_each(visitor);
+
+    EXPECT_EQ(visitor.key_count, 1);
+    EXPECT_EQ(visitor.value_count, 1);
+
+    auto const const_map = map[1];
+    auto const_visitor = stop_visitor{};
+    const_map.for_each(const_visitor);
+
+    EXPECT_EQ(const_visitor.key_count, 1);
+    EXPECT_EQ(const_visitor.value_count, 1);
+}
+
 TEST_F(PolyMapTest, empty)
 {
     EXPECT_FALSE(map.empty());
