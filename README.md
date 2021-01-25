@@ -4,7 +4,7 @@
 
 Polymorphic map container.
 
-A recursive map that can have any shape and can hold any type for keys and values.
+A recursive map that can have any shape and can hold any type for keys and values. The types of keys are passed as template arguments at construct and there is no need to specify the types for values as it will hold any type.
 
 ## Requirements
 
