@@ -28,7 +28,7 @@ class poly_map {
     template <typename T>
     [[nodiscard]] auto& at(const T& key)
     {
-        return items_.at(key);
+        return elements_.at(key);
     }
 
     /**
@@ -60,7 +60,7 @@ class poly_map {
     template <typename T>
     auto& operator[](const T& key)
     {
-        return items_[key];
+        return elements_[key];
     }
 
     /**
@@ -71,15 +71,17 @@ class poly_map {
     template <typename V>
     void for_each(V&& visitor)
     {
-        for (auto& item : items_.items_) {
-            const auto visit = [this, &visitor, &item](auto& key) { return visitor(key, item.second.value_, items_); };
+        for (auto& element : elements_.elements_) {
+            const auto visit = [this, &visitor, &element](auto& key) {
+                return visitor(key, element.second.value_, elements_);
+            };
 
-            if (!std::visit(visit, item.first)) {
+            if (!std::visit(visit, element.first)) {
                 return;
             }
         }
 
-        items_.for_each(std::forward<V>(visitor));
+        elements_.for_each(std::forward<V>(visitor));
     }
 
     /**
@@ -96,17 +98,17 @@ class poly_map {
     /**
      * Tests if map has no elements.
      */
-    [[nodiscard]] bool empty() const noexcept { return items_.empty(); }
+    [[nodiscard]] bool empty() const noexcept { return elements_.empty(); }
 
     /**
      * Returns number of elements.
      */
-    [[nodiscard]] std::size_t size() const noexcept { return items_.size(); }
+    [[nodiscard]] std::size_t size() const noexcept { return elements_.size(); }
 
     /**
      * Removes elements from map.
      */
-    void clear() noexcept { items_.items_.clear(); }
+    void clear() noexcept { elements_.elements_.clear(); }
 
     /**
      * Tests if given path of keys is in map.
@@ -117,12 +119,12 @@ class poly_map {
     template <typename T, typename... Ts>
     [[nodiscard]] bool contains(const T& key, const Ts&... keys) const
     {
-        return items_.contains(key, keys...);
+        return elements_.contains(key, keys...);
     }
 
    private:
-    struct poly_map_item;
-    poly_map_item items_;
+    struct poly_map_element;
+    poly_map_element elements_;
 };
 
 /**
@@ -163,8 +165,8 @@ struct poly_map_value {
  * @tparam Keys Types of keys.
  */
 template <typename... Keys>
-struct poly_map<Keys...>::poly_map_item {
-    std::map<std::variant<Keys...>, poly_map_item> items_;
+struct poly_map<Keys...>::poly_map_element {
+    std::map<std::variant<Keys...>, poly_map_element> elements_;
     poly_map_value value_;
 
     /**
@@ -195,7 +197,7 @@ struct poly_map<Keys...>::poly_map_item {
     template <typename T>
     [[nodiscard]] auto& at(const T& key)
     {
-        return items_.at(key);
+        return elements_.at(key);
     }
 
     /**
@@ -211,7 +213,7 @@ struct poly_map<Keys...>::poly_map_item {
     template <typename T>
     auto& operator[](const T key)
     {
-        return items_[key];
+        return elements_[key];
     }
 
     /**
@@ -237,18 +239,18 @@ struct poly_map<Keys...>::poly_map_item {
     template <typename V>
     void for_each(V&& visitor)
     {
-        for (auto& item_ : items_) {
-            for (auto& item : item_.second.items_) {
-                const auto visit = [&visitor, &item, &item_](auto& key) {
-                    return visitor(key, item.second.value_, item_.second.items_);
+        for (auto& element : elements_) {
+            for (auto& elem : element.second.elements_) {
+                const auto visit = [&visitor, &elem, &element](auto& key) {
+                    return visitor(key, elem.second.value_, element.second.elements_);
                 };
 
-                if (!std::visit(visit, item.first)) {
+                if (!std::visit(visit, elem.first)) {
                     return;
                 }
             }
 
-            item_.second.for_each(std::forward<V>(visitor));
+            element.second.for_each(std::forward<V>(visitor));
         }
     }
 
@@ -260,23 +262,23 @@ struct poly_map<Keys...>::poly_map_item {
     template <typename V>
     void for_each(V&& visitor) const
     {
-        const_cast<poly_map_item*>(this)->for_each(std::forward<V>(visitor));
+        const_cast<poly_map_element*>(this)->for_each(std::forward<V>(visitor));
     }
 
     /**
      * Tests if map has no elements.
      */
-    [[nodiscard]] bool empty() const noexcept { return items_.empty(); }
+    [[nodiscard]] bool empty() const noexcept { return elements_.empty(); }
 
     /**
      * Returns number of elements.
      */
     [[nodiscard]] std::size_t size() const noexcept
     {
-        std::size_t sz = items_.size();
+        std::size_t sz = elements_.size();
 
-        for (auto& item : items_) {
-            sz += item.second.size();
+        for (auto& element : elements_) {
+            sz += element.second.size();
         }
 
         return sz;
@@ -285,7 +287,7 @@ struct poly_map<Keys...>::poly_map_item {
     /**
      * Removes elements from map.
      */
-    void clear() noexcept { items_.clear(); }
+    void clear() noexcept { elements_.clear(); }
 
     /**
      * Tests if given key is in map.
@@ -295,7 +297,7 @@ struct poly_map<Keys...>::poly_map_item {
     template <typename T>
     [[nodiscard]] bool contains(const T& key) const
     {
-        return items_.find(key) != items_.end();
+        return elements_.find(key) != elements_.end();
     }
 
     /**
@@ -311,7 +313,7 @@ struct poly_map<Keys...>::poly_map_item {
             return false;
         }
 
-        return items_.at(key).contains(keys...);
+        return elements_.at(key).contains(keys...);
     }
 };
 
