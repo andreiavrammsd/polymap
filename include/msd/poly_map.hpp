@@ -128,7 +128,7 @@ class poly_map {
 /**
  * Map value
  */
-struct value {
+struct poly_map_value {
     std::any value_;
 
     /**
@@ -165,7 +165,7 @@ struct value {
 template <typename... Keys>
 struct poly_map<Keys...>::poly_map_item {
     std::map<std::variant<Keys...>, poly_map_item> items_;
-    value value_;
+    poly_map_value value_;
 
     /**
      * Assign value to map.

@@ -61,7 +61,7 @@ TEST_F(PolyMapTest, get)
 
 struct map_visitor {
     std::vector<std::any> keys;
-    std::vector<msd::value> values;
+    std::vector<msd::poly_map_value> values;
 
     template <typename V, typename M>
     bool operator()(double key, V& value, M&)
