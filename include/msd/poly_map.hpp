@@ -6,6 +6,7 @@
 #include <any>
 #include <cstdlib>
 #include <map>
+#include <utility>
 #include <variant>
 
 namespace msd {
@@ -71,16 +72,6 @@ class poly_map {
     template <typename V>
     void for_each(V&& visitor)
     {
-        for (auto& element : elements_.elements_) {
-            const auto visit = [this, &visitor, &element](auto& key) {
-                return visitor(key, element.second.value_, elements_);
-            };
-
-            if (!std::visit(visit, element.first)) {
-                return;
-            }
-        }
-
         elements_.for_each(std::forward<V>(visitor));
     }
 
@@ -240,14 +231,12 @@ struct poly_map<Keys...>::poly_map_element {
     void for_each(V&& visitor)
     {
         for (auto& element : elements_) {
-            for (auto& elem : element.second.elements_) {
-                const auto visit = [&visitor, &elem, &element](auto& key) {
-                    return visitor(key, elem.second.value_, element.second.elements_);
-                };
+            const auto visit = [this, &visitor, &element](auto& key) {
+                return visitor(key, element.second.value_, elements_);
+            };
 
-                if (!std::visit(visit, elem.first)) {
-                    return;
-                }
+            if (!std::visit(visit, element.first)) {
+                return;
             }
 
             element.second.for_each(std::forward<V>(visitor));

@@ -13,6 +13,8 @@ class PolyMapTest : public ::testing::Test {
     msd::poly_map<int, double, std::string> map;
     const msd::poly_map<int, double, std::string>& const_map = map;
 
+    const double eps = std::numeric_limits<double>::epsilon();
+
     void SetUp() override
     {
         map[1] = 22;
@@ -93,22 +95,21 @@ TEST_F(PolyMapTest, for_each)
     auto visitor = map_visitor{};
     map.for_each(visitor);
 
-    auto eps = std::numeric_limits<double>::epsilon();
     EXPECT_EQ(visitor.keys.size(), 6);
     EXPECT_EQ(std::any_cast<int>(visitor.keys[0]), 1);
     EXPECT_EQ(std::any_cast<int>(visitor.keys[1]), 2);
     EXPECT_NEAR(std::any_cast<double>(visitor.keys[2]), 3.1, eps);
     EXPECT_NEAR(std::any_cast<double>(visitor.keys[3]), 4.2, eps);
-    EXPECT_EQ(std::any_cast<std::string>(visitor.keys[4]), "f");
-    EXPECT_EQ(std::any_cast<std::string>(visitor.keys[5]), "g");
+    EXPECT_EQ(std::any_cast<std::string>(visitor.keys[4]), "g");
+    EXPECT_EQ(std::any_cast<std::string>(visitor.keys[5]), "f");
 
     EXPECT_EQ(visitor.values.size(), 6);
     EXPECT_EQ(visitor.values[0].get<std::string>(), "a");
     EXPECT_EQ(visitor.values[1].get<int>(), 8);
     EXPECT_EQ(visitor.values[2].get<int>(), 1);
     EXPECT_TRUE(visitor.values[3].empty());
-    EXPECT_EQ(visitor.values[4].get<int>(), 199);
-    EXPECT_EQ((visitor.values[5].get<std::pair<int, int>>()), std::make_pair(1, 2));
+    EXPECT_EQ((visitor.values[4].get<std::pair<int, int>>()), std::make_pair(1, 2));
+    EXPECT_EQ(visitor.values[5].get<int>(), 199);
 
     auto const_visitor = map_visitor{};
     const_map.for_each(const_visitor);
@@ -181,7 +182,11 @@ struct passed_map_visitor {
     }
 };
 
-TEST_F(PolyMapTest, for_each_map_passed_to_visitor) { map[1][2].for_each(passed_map_visitor{map}); }
+TEST_F(PolyMapTest, for_each_map_passed_to_visitor)
+{
+    map[1][2].for_each(passed_map_visitor{map});
+    const_map.at(1).at(2).for_each(passed_map_visitor{map});
+}
 
 struct element_visitor {
     std::vector<std::any>& keys;
@@ -199,18 +204,25 @@ TEST_F(PolyMapTest, for_each_element)
     std::vector<std::any> keys;
 
     map[1][2][3.1].for_each(element_visitor{keys});
-    EXPECT_EQ(keys.size(), 1);
-    EXPECT_EQ(std::any_cast<std::string>(keys[0]), "g");
+    EXPECT_EQ(keys.size(), 3);
+    EXPECT_NEAR(std::any_cast<double>(keys[0]), 4.2, eps);
+    EXPECT_EQ(std::any_cast<std::string>(keys[1]), "g");
+    EXPECT_EQ(std::any_cast<std::string>(keys[2]), "f");
 
     keys.clear();
     map.at(1).at(2).at(3.1).for_each(element_visitor{keys});
-    EXPECT_EQ(keys.size(), 1);
-    EXPECT_EQ(std::any_cast<std::string>(keys[0]), "g");
+    EXPECT_EQ(keys.size(), 3);
+    EXPECT_NEAR(std::any_cast<double>(keys[0]), 4.2, eps);
+    EXPECT_EQ(std::any_cast<std::string>(keys[1]), "g");
+    EXPECT_EQ(std::any_cast<std::string>(keys[2]), "f");
 
     keys.clear();
-    const_map.at(1).at(2).at(3.1).for_each(element_visitor{keys});
-    EXPECT_EQ(keys.size(), 1);
-    EXPECT_EQ(std::any_cast<std::string>(keys[0]), "g");
+    const_map.at(1).at(2).for_each(element_visitor{keys});
+    EXPECT_EQ(keys.size(), 4);
+    EXPECT_NEAR(std::any_cast<double>(keys[0]), 3.1, eps);
+    EXPECT_NEAR(std::any_cast<double>(keys[1]), 4.2, eps);
+    EXPECT_EQ(std::any_cast<std::string>(keys[2]), "g");
+    EXPECT_EQ(std::any_cast<std::string>(keys[3]), "f");
 }
 
 TEST_F(PolyMapTest, for_each_stop_element)
