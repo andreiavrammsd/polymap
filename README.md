@@ -4,7 +4,7 @@
 
 Polymorphic map container.
 
-A recursive map with infinite levels and multiple types for keys and values.
+A recursive map that can have any shape and can hold any type for keys and values.
 
 ## Requirements
 
