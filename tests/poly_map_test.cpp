@@ -31,16 +31,16 @@ class PolyMapTest : public ::testing::Test {
 TEST_F(PolyMapTest, at)
 {
     EXPECT_EQ(map.at(1).get<std::string>(), "a");
-    EXPECT_THROW(map.at(999), std::out_of_range);
+    EXPECT_THROW((void)map.at(999), std::out_of_range);
 
     EXPECT_EQ(map.at(1).at(2).get<int>(), 8);
-    EXPECT_THROW(map.at(1).at(2).at(8), std::out_of_range);
+    EXPECT_THROW((void)map.at(1).at(2).at(8), std::out_of_range);
 
     EXPECT_EQ(const_map.at(1).get<std::string>(), "a");
-    EXPECT_THROW(const_map.at(999), std::out_of_range);
+    EXPECT_THROW((void)const_map.at(999), std::out_of_range);
 
     EXPECT_EQ(const_map.at(1).at(2).get<int>(), 8);
-    EXPECT_THROW(const_map.at(1).at(2).at(8), std::out_of_range);
+    EXPECT_THROW((void)const_map.at(1).at(2).at(8), std::out_of_range);
 }
 
 TEST_F(PolyMapTest, subscript)
@@ -56,7 +56,7 @@ TEST_F(PolyMapTest, get)
     EXPECT_TRUE(map[99].empty());
     EXPECT_EQ(map[1][2][3.1].get<int>(), 1);
     EXPECT_EQ(map.at(1).at(2).at(3.1).get<int>(), 1);
-    EXPECT_THROW({ map[1] = map[1].get<int>(); }, std::bad_cast);
+    EXPECT_THROW((void)map[1].get<int>(), std::bad_cast);
 
     EXPECT_EQ(const_map.at(1).at(2).at(3.1).get<int>(), 1);
 }
