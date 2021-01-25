@@ -183,7 +183,7 @@ struct passed_map_visitor {
 
 TEST_F(PolyMapTest, for_each_map_passed_to_visitor) { map[1][2].for_each(passed_map_visitor{map}); }
 
-struct child_visitor {
+struct element_visitor {
     std::vector<std::any>& keys;
 
     template <typename K, typename V, typename M>
@@ -194,26 +194,26 @@ struct child_visitor {
     }
 };
 
-TEST_F(PolyMapTest, for_each_child)
+TEST_F(PolyMapTest, for_each_element)
 {
     std::vector<std::any> keys;
 
-    map[1][2][3.1].for_each(child_visitor{keys});
+    map[1][2][3.1].for_each(element_visitor{keys});
     EXPECT_EQ(keys.size(), 1);
     EXPECT_EQ(std::any_cast<std::string>(keys[0]), "g");
 
     keys.clear();
-    map.at(1).at(2).at(3.1).for_each(child_visitor{keys});
+    map.at(1).at(2).at(3.1).for_each(element_visitor{keys});
     EXPECT_EQ(keys.size(), 1);
     EXPECT_EQ(std::any_cast<std::string>(keys[0]), "g");
 
     keys.clear();
-    const_map.at(1).at(2).at(3.1).for_each(child_visitor{keys});
+    const_map.at(1).at(2).at(3.1).for_each(element_visitor{keys});
     EXPECT_EQ(keys.size(), 1);
     EXPECT_EQ(std::any_cast<std::string>(keys[0]), "g");
 }
 
-TEST_F(PolyMapTest, for_each_stop_child)
+TEST_F(PolyMapTest, for_each_stop_element)
 {
     auto visitor = stop_visitor{};
     map[1].for_each(visitor);
