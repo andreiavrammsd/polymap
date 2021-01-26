@@ -286,9 +286,10 @@ TEST_F(PolyMapTest, contains)
     EXPECT_TRUE(map.contains(1));
     EXPECT_TRUE(map.contains(1, 2));
     EXPECT_TRUE(map.contains(1, 2, 3.1));
+    EXPECT_TRUE(map.contains(1, 2, 3.1, 4.2, "g"));
+    EXPECT_FALSE(map.contains(1, 2, 3.1, 4.2, "g", "x"));
     EXPECT_FALSE(map.contains(9));
     EXPECT_FALSE(map.contains(1, 9));
-    EXPECT_FALSE(map.contains(1, 2, 3.1, 9));
     EXPECT_FALSE(map.contains(1, 2, 3.1, 9));
     EXPECT_FALSE(map.contains(2, 1));
     EXPECT_FALSE(map.contains(3.1, 2, 1));
@@ -299,4 +300,5 @@ TEST_F(PolyMapTest, contains)
 
     EXPECT_TRUE(const_map.contains(1));
     EXPECT_FALSE(const_map.at(1).at(2).contains(2));
+    EXPECT_TRUE(const_map.at(1).at(2).contains(3.1, 4.2));
 }
