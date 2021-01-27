@@ -8,10 +8,12 @@
 
 #include "gtest/gtest.h"
 
+using poly_map_type = msd::poly_map<int, double, std::string>;
+
 class PolyMapTest : public ::testing::Test {
    protected:
-    msd::poly_map<int, double, std::string> map;
-    const msd::poly_map<int, double, std::string>& const_map = map;
+    poly_map_type map;
+    const poly_map_type& const_map = map;
 
     const double eps = std::numeric_limits<double>::epsilon();
 
@@ -159,7 +161,7 @@ TEST_F(PolyMapTest, for_each_stop)
 }
 
 struct passed_map_visitor {
-    const msd::poly_map<int, double, std::string>& test_map;
+    const poly_map_type& test_map;
 
     template <typename V, typename M>
     bool operator()(const std::string& key, V&, M& map)
