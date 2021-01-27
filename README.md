@@ -2,9 +2,14 @@
 
 [![build](https://github.com/andreiavrammsd/polymap/workflows/build/badge.svg)](https://github.com/andreiavrammsd/polymap/actions)
 
-Polymorphic map container.
+### Polymorphic map container.
 
-A recursive map that can have any shape and can hold any type for keys and values. The types of keys are passed as template arguments at construct and there is no need to specify the types for values as it will hold any type.
+A recursive map that can have any shape and can hold multiple types for keys and values.
+
+* Header-only library.
+* Key types are provided at construct time as template arguments. They must meet the type conditions for [std::variant](https://en.cppreference.com/w/cpp/utility/variant).
+* Value types must be copy constructible as the map takes ownership on the objects assigned.
+* Can be visualised as a tree.
 
 ## Requirements
 
