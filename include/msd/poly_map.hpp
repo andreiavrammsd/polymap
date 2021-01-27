@@ -15,11 +15,14 @@ template <typename... Keys>
 class poly_map {
     static_assert(sizeof...(Keys) > 0, "No key type provided");
 
+    struct poly_map_element;
+
    public:
     /**
-     * Checked access to map by key.
+     * Checked access by key.
      *
      * @tparam T Type of key.
+     *
      * @param key Key to index map by.
      *
      * @return Map at given key.
@@ -27,31 +30,52 @@ class poly_map {
      * @throws std::out_of_range if key not found.
      */
     template <typename T>
-    [[nodiscard]] auto& at(const T& key)
+    [[nodiscard]] poly_map_element& at(const T& key)
     {
         return elements_.at(key);
     }
 
     /**
-     * Checked access to map by key. Const overload.
+     * Checked access by list of keys.
+     *
+     * @tparam T Type of first key.
+     * @tparam Ts Types of other keys.
+     *
+     * @param key First key to index map by.
+     * @param keys Other keys.
+     *
+     * @return Map at given key.
+     *
+     * @throws std::out_of_range if key not found.
+     */
+    template <typename T, typename... Ts>
+    [[nodiscard]] auto& at(const T& key, const Ts&... keys)
+    {
+        return elements_.at(key).at(keys...);
+    }
+
+    /**
+     * Checked access by key. Const overload.
      *
      * @tparam T Type of key.
+     *
      * @param key Key to index map by.
      *
      * @return Map at given key.
      *
      * @throws std::out_of_range if key not found.
      */
-    template <typename T>
-    [[nodiscard]] auto& at(const T& key) const
+    template <typename T, typename... Ts>
+    [[nodiscard]] auto& at(const T& key, const Ts&... keys) const
     {
-        return const_cast<poly_map*>(this)->at(key);
+        return const_cast<poly_map*>(this)->at(key, keys...);
     }
 
     /**
-     * Unchecked access to map by key.
+     * Unchecked access by key.
      *
      * @tparam T Type of key.
+     *
      * @param key Key to index map by.
      *
      * @return Map at given key.
@@ -114,7 +138,6 @@ class poly_map {
     }
 
    private:
-    struct poly_map_element;
     poly_map_element elements_;
 };
 
@@ -176,9 +199,10 @@ struct poly_map<Keys...>::poly_map_element {
     }
 
     /**
-     * Checked access to map by key.
+     * Checked access by key.
      *
      * @tparam T Type of key.
+     *
      * @param key Key to index map by.
      *
      * @return Map at given key.
@@ -192,9 +216,29 @@ struct poly_map<Keys...>::poly_map_element {
     }
 
     /**
-     * Unchecked access to map by key.
+     * Checked access by list of keys.
+     *
+     * @tparam T Type of first key.
+     * @tparam Ts Types of other keys.
+     *
+     * @param key First key to index map by.
+     * @param keys Other keys.
+     *
+     * @return Map at given key.
+     *
+     * @throws std::out_of_range if key not found.
+     */
+    template <typename T, typename... Ts>
+    [[nodiscard]] poly_map_element& at(const T& key, const Ts&... keys)
+    {
+        return elements_.at(key).at(keys...);
+    }
+
+    /**
+     * Unchecked access by key.
      *
      * @tparam T Type of key.
+     *
      * @param key Key to index map by.
      *
      * @return Map at given key.

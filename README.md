@@ -43,7 +43,8 @@ int main() {
     map.at(1) = 23;
     
     map[1] = std::string{"a"};
-    map[1][2] = 8;
+    map[1][2] = 9;
+    map.at(1, 2) = 8;
     map[1][2][3.1] = 1;
     map[1][2][3.1]["f"] = 199;
     map[1][2][3.1][4.2]["g"] = std::make_pair(1, 2);
