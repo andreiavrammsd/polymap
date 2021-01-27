@@ -22,6 +22,7 @@ A recursive map that can have any shape and can hold multiple types for keys and
 #include <cassert>
 #include <iostream>
 #include <string>
+#include <tuple>
 
 #include "msd/poly_map.hpp"
 
