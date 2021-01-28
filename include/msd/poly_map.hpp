@@ -13,7 +13,7 @@ namespace msd {
 
 template <typename... Keys>
 class poly_map {
-    static_assert(sizeof...(Keys) > 0, "No key type provided");
+    static_assert(sizeof...(Keys) > 0, "no key type provided");
 
     struct poly_map_element;
 
