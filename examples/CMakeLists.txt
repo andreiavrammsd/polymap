@@ -1,0 +1,1 @@
+add_executable(example_lambda_visitor lambda_visitor.cpp)
