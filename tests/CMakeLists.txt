@@ -1,3 +1,5 @@
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra -Wpedantic -Werror --coverage -fsanitize=undefined")
+
 # Testing framework
 include(FetchContent)
 if (NOT googletest_POPULATED)

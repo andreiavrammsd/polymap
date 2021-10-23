@@ -1,4 +1,4 @@
-name: build
+name: test
 
 on:
   push:
@@ -10,7 +10,7 @@ env:
   BUILD_TYPE: Release
 
 jobs:
-  build:
+  test:
     # The CMake configure and build commands are platform agnostic and should work equally
     # well on Windows or Mac.  You can convert this to a matrix build if you need
     # cross-platform coverage.

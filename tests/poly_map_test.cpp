@@ -316,3 +316,40 @@ TEST_F(PolyMapTest, contains)
     EXPECT_FALSE(const_map.at(1).at(2).contains(2));
     EXPECT_TRUE(const_map.at(1).at(2).contains(3.1, 4.2));
 }
+
+template <typename T>
+bool recursive_find(poly_map_type& m, const T& value)
+{
+    if (m.contains(value)) {
+        return true;
+    }
+
+    if (m.empty()) {
+        return false;
+    }
+
+    return recursive_find(m.map(), value);
+}
+
+template <typename T>
+bool recursive_find(const poly_map_type& m, const T& value)
+{
+    if (m.contains(value)) {
+        return true;
+    }
+
+    if (m.empty()) {
+        return false;
+    }
+
+    return recursive_find(m.map(), value);
+}
+
+TEST_F(PolyMapTest, recursion)
+{
+    EXPECT_TRUE(recursive_find(map, "f"));
+    EXPECT_FALSE(recursive_find(map, 1.1));
+
+    EXPECT_TRUE(recursive_find(const_map, "f"));
+    EXPECT_FALSE(recursive_find(const_map, 1.1));
+}
