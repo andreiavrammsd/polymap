@@ -221,7 +221,7 @@ class poly_map {
     template <typename T>
     [[nodiscard]] bool contains(const T& key) const
     {
-        return elements_.find(key) != elements_.end();
+        return elements_.find(key) != elements_.cend();
     }
 
     /**
