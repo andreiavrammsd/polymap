@@ -11,10 +11,14 @@
 
 namespace msd {
 
-template <typename... Keys>
+/**
+ * Polymorphic map
+ *
+ * @tparam Key First type of key.
+ * @tparam Keys Other types of keys.
+ */
+template <typename Key, typename... Keys>
 class poly_map {
-    static_assert(sizeof...(Keys) > 0, "no key type provided");
-
     struct poly_map_element;
 
    public:
@@ -190,11 +194,12 @@ struct poly_map_value {
 /**
  * Child map
  *
- * @tparam Keys Types of keys.
+ * @tparam Key First type of key.
+ * @tparam Keys Other types of keys.
  */
-template <typename... Keys>
-struct poly_map<Keys...>::poly_map_element {
-    std::map<std::variant<Keys...>, poly_map_element> elements_;
+template <typename Key, typename... Keys>
+struct poly_map<Key, Keys...>::poly_map_element {
+    std::map<std::variant<Key, Keys...>, poly_map_element> elements_;
 
     /**
      * Assign value to map.
