@@ -145,7 +145,18 @@ class poly_map {
  * Map value
  */
 struct poly_map_value {
-    std::any value_;
+    /**
+     * Set value in map.
+     *
+     * @param value Value to set.
+     *
+     * @throws std::bad_alloc or the exception thrown by the assigned value's constructor.
+     */
+    template <typename T>
+    void set(T&& value)
+    {
+        value_ = std::forward<T>(value);
+    }
 
     /**
      * Get value from map.
@@ -171,6 +182,9 @@ struct poly_map_value {
      * Tests if value has been set.
      */
     [[nodiscard]] bool empty() const noexcept { return !value_.has_value(); }
+
+   private:
+    std::any value_;
 };
 
 /**
@@ -181,7 +195,6 @@ struct poly_map_value {
 template <typename... Keys>
 struct poly_map<Keys...>::poly_map_element {
     std::map<std::variant<Keys...>, poly_map_element> elements_;
-    poly_map_value value_;
 
     /**
      * Assign value to map.
@@ -193,7 +206,7 @@ struct poly_map<Keys...>::poly_map_element {
     template <typename T>
     auto& operator=(T&& v)
     {
-        value_.value_ = std::forward<T>(v);
+        value_.set(std::forward<T>(v));
 
         return *this;
     }
@@ -348,6 +361,9 @@ struct poly_map<Keys...>::poly_map_element {
 
         return elements_.at(key).contains(keys...);
     }
+
+   private:
+    poly_map_value value_;
 };
 
 }  // namespace msd
