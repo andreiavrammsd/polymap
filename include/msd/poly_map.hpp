@@ -244,17 +244,19 @@ class poly_map {
      * Access map element at next level
      *
      * @pre Map must not be empty: !empty().
+     *
      * @return Reference to map.
      */
-    poly_map& map() { return elements_.begin()->second; }
+    poly_map& map() noexcept { return elements_.begin()->second; }
 
     /**
      * Access map element at next level.  Const overload.
      *
      * @pre Map must not be empty: !empty().
+     *
      * @return Const reference to map.
      */
-    const poly_map& map() const { return elements_.cbegin()->second; }
+    const poly_map& map() const noexcept { return elements_.cbegin()->second; }
 
    private:
     std::map<std::variant<Key, Keys...>, poly_map> elements_;
