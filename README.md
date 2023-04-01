@@ -15,7 +15,7 @@ A recursive map that can have any shape and can hold multiple types for keys and
 ## Requirements
 
 * C++17
-* CMake 3.17+
+* CMake 3.17+ or Bazel
 
 ## Usage
 
