@@ -1,0 +1,7 @@
+load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive")
+
+http_archive(
+    name = "poly_map",
+    url = "https://github.com/andreiavrammsd/polymap/archive/refs/tags/v0.3.0.zip",
+    strip_prefix = "polymap-0.3.0",
+)
