@@ -1,10 +1,10 @@
-name: test
+name: bazel
 
 on:
   push:
 
 jobs:
-  test:
+  bazel:
     runs-on: ubuntu-22.04
 
     steps:
