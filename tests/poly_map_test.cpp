@@ -1,4 +1,4 @@
-#include "msd/poly_map.hpp"
+#include <msd/poly_map.hpp>
 
 #include <any>
 #include <limits>
@@ -6,7 +6,7 @@
 #include <tuple>
 #include <vector>
 
-#include "gtest/gtest.h"
+#include <gtest/gtest.h>
 
 using poly_map_type = msd::poly_map<int, double, std::string>;
 
@@ -106,7 +106,7 @@ struct map_visitor {
 
 TEST_F(PolyMapTest, for_each)
 {
-    auto visitor = map_visitor{};
+    map_visitor visitor{};
     map.for_each(visitor);
 
     EXPECT_EQ(visitor.keys.size(), 6);
@@ -125,11 +125,11 @@ TEST_F(PolyMapTest, for_each)
     EXPECT_EQ((visitor.values[4].get<std::pair<int, int>>()), std::make_pair(1, 2));
     EXPECT_EQ(visitor.values[5].get<int>(), 199);
 
-    auto const_visitor = map_visitor{};
-    const_map.for_each(const_visitor);
+    map_visitor visitor_for_const_map {};
+    const_map.for_each(visitor_for_const_map);
 
-    EXPECT_EQ(const_visitor.keys.size(), 6);
-    EXPECT_EQ(const_visitor.values.size(), 6);
+    EXPECT_EQ(visitor_for_const_map.keys.size(), 6);
+    EXPECT_EQ(visitor_for_const_map.values.size(), 6);
 }
 
 struct stop_visitor {
@@ -137,7 +137,7 @@ struct stop_visitor {
     std::size_t value_count;
 
     template <typename K, typename V, typename M>
-    auto operator()(K&, V&, M&)
+    bool operator()(K&, V&, M&)
     {
         ++key_count;
         ++value_count;
@@ -147,13 +147,13 @@ struct stop_visitor {
 
 TEST_F(PolyMapTest, for_each_stop)
 {
-    auto visitor = stop_visitor{};
+    stop_visitor visitor{};
     map.for_each(visitor);
 
     EXPECT_EQ(visitor.key_count, 1);
     EXPECT_EQ(visitor.value_count, 1);
 
-    auto const_visitor = stop_visitor{};
+    stop_visitor const_visitor{};
     const_map.for_each(const_visitor);
 
     EXPECT_EQ(const_visitor.key_count, 1);
@@ -167,22 +167,22 @@ struct passed_map_visitor {
     bool operator()(const std::string& key, V&, M& map)
     {
         if (key == "f") {
-            auto passed_map_ptr = static_cast<void*>(&map);
-            auto test_map_ptr = static_cast<void*>(&test_map.at(1).at(2).at(3.1));
+            const auto passed_map_ptr = static_cast<void*>(&map);
+            const auto test_map_ptr = static_cast<void*>(&test_map.at(1).at(2).at(3.1));
             EXPECT_EQ(passed_map_ptr, test_map_ptr);
 
-            auto passed_map_value = map[key].template get<int>();
-            auto test_map_value = test_map.at(1).at(2).at(3.1).at(key).get<int>();
+            const auto passed_map_value = map[key].template get<int>();
+            const auto test_map_value = test_map.at(1).at(2).at(3.1).at(key).get<int>();
             EXPECT_EQ(passed_map_value, test_map_value);
         }
 
         if (key == "g") {
-            auto passed_map_ptr = static_cast<void*>(&map);
-            auto test_map_ptr = static_cast<void*>(&test_map.at(1).at(2).at(3.1).at(4.2));
+            const auto passed_map_ptr = static_cast<void*>(&map);
+            const auto test_map_ptr = static_cast<void*>(&test_map.at(1).at(2).at(3.1).at(4.2));
             EXPECT_EQ(passed_map_ptr, test_map_ptr);
 
-            auto passed_map_value = map[key].template get<std::pair<int, int>>();
-            auto test_map_value = test_map.at(1).at(2).at(3.1).at(4.2).at(key).get<std::pair<int, int>>();
+            const auto passed_map_value = map[key].template get<std::pair<int, int>>();
+            const auto test_map_value = test_map.at(1).at(2).at(3.1).at(4.2).at(key).get<std::pair<int, int>>();
             EXPECT_EQ(passed_map_value, test_map_value);
         }
 
@@ -206,7 +206,7 @@ struct element_visitor {
     std::vector<std::any>& keys;
 
     template <typename K, typename V, typename M>
-    auto operator()(const K& key, V&, M&)
+    bool operator()(const K& key, V&, M&)
     {
         keys.emplace_back(key);
         return true;
@@ -241,17 +241,17 @@ TEST_F(PolyMapTest, for_each_element)
 
 TEST_F(PolyMapTest, for_each_stop_element)
 {
-    auto visitor = stop_visitor{};
+    stop_visitor visitor{};
     map[1].for_each(visitor);
 
     EXPECT_EQ(visitor.key_count, 1);
     EXPECT_EQ(visitor.value_count, 1);
 
-    auto const_visitor = stop_visitor{};
-    const_map.for_each(const_visitor);
+    stop_visitor visitor_for_const_map{};
+    const_map.for_each(visitor_for_const_map);
 
-    EXPECT_EQ(const_visitor.key_count, 1);
-    EXPECT_EQ(const_visitor.value_count, 1);
+    EXPECT_EQ(visitor_for_const_map.key_count, 1);
+    EXPECT_EQ(visitor_for_const_map.value_count, 1);
 }
 
 TEST_F(PolyMapTest, empty)

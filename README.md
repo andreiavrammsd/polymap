@@ -25,18 +25,18 @@ A recursive map that can have any shape and can hold multiple types for keys and
 #include <string>
 #include <utility>
 
-#include "msd/poly_map.hpp"
+#include <msd/poly_map.hpp>
 
 struct visitor {
     template <typename V, typename M>
-    auto operator()(const double key, V&, M&)
+    bool operator()(const double key, V&, M&)
     {
         std::cout << "double = " << key << "\n";
         return true;
     }
 
     template <typename K, typename V, typename M>
-    auto operator()(K& key, V&, M&)
+    bool operator()(K& key, V&, M&)
     {
         std::cout << "other = " << key << "\n";
         return true;

@@ -38,7 +38,7 @@ struct poly_map_value {
      * @throws std::bad_cast if cannot cast stored value to given type.
      */
     template <typename T>
-    [[nodiscard]] auto get() const
+    [[nodiscard]] T get() const
     {
         try {
             return std::any_cast<T>(value_);
@@ -71,10 +71,12 @@ class poly_map {
      *
      * @param v Value to add.
      *
+     * @return Reference to map.
+     *
      * @throws std::bad_alloc or the exception thrown by the assigned value's constructor.
      */
     template <typename T>
-    auto& operator=(T&& v)
+    poly_map& operator=(T&& v)
     {
         value_.set(std::forward<T>(v));
 
@@ -91,7 +93,7 @@ class poly_map {
      * @throws std::out_of_range if key not found.
      */
     template <typename T>
-    [[nodiscard]] auto& at(const T& key)
+    [[nodiscard]] poly_map& at(const T& key)
     {
         return elements_.at(key);
     }
@@ -122,7 +124,7 @@ class poly_map {
      * @throws std::out_of_range if key not found.
      */
     template <typename T, typename... Ts>
-    [[nodiscard]] auto& at(const T& key, const Ts&... keys) const
+    [[nodiscard]] poly_map& at(const T& key, const Ts&... keys) const
     {
         return const_cast<poly_map*>(this)->at(key, keys...);
     }
@@ -137,7 +139,7 @@ class poly_map {
      * @throws std::out_of_range if key not found.
      */
     template <typename T>
-    auto& operator[](const T key)
+    poly_map& operator[](const T key)
     {
         return elements_[key];
     }
@@ -152,7 +154,7 @@ class poly_map {
      * @throws std::bad_cast if cannot cast stored value to given type.
      */
     template <typename T>
-    [[nodiscard]] auto get() const
+    [[nodiscard]] T get() const
     {
         return value_.template get<T>();
     }
@@ -166,7 +168,7 @@ class poly_map {
     void for_each(V&& visitor)
     {
         for (auto& element : elements_) {
-            const auto visit = [this, &visitor, &element](auto& key) {
+            const auto visit = [this, &visitor, &element](auto& key) -> bool {
                 return visitor(key, element.second.value_, elements_);
             };
 

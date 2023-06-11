@@ -1,7 +1,7 @@
 #include <iostream>
 #include <string>
 
-#include "msd/poly_map.hpp"
+#include <msd/poly_map.hpp>
 
 // https://en.cppreference.com/w/cpp/utility/variant/visit#Example
 template <class... Ts>
@@ -22,17 +22,17 @@ int main()
     map[1][2][3.1][4.2]["g"] = 199;
 
     const auto lambda_visitor = visitor{
-        [](const double key, auto& value, auto&) {
+        [](const double key, auto& value, auto&) -> bool {
             std::cout << "double key " << key << " " << (value.empty() ? "has no value" : "has a value") << "\n";
             return true;
         },
 
-        [](const std::string& key, auto& value, auto&) {
+        [](const std::string& key, auto& value, auto&) -> bool {
             std::cout << "string key " << key << " " << (value.empty() ? "has no value" : "has a value") << "\n";
             return true;
         },
 
-        [](auto key, auto& value, auto&) {
+        [](auto key, auto& value, auto&) -> bool {
             std::cout << "other key " << key << " " << (value.empty() ? "has no value" : "has a value") << "\n";
             return true;
         },

@@ -1,6 +1,6 @@
 #include <cassert>
 
-#include "msd/poly_map.hpp"
+#include <msd/poly_map.hpp>
 
 int main()
 {
