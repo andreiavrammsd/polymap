@@ -1,6 +1,8 @@
 # Poly map
 
-[![build](https://github.com/andreiavrammsd/polymap/workflows/build/badge.svg)](https://github.com/andreiavrammsd/polymap/actions)
+[![test](https://github.com/andreiavrammsd/polymap/workflows/test/badge.svg)](https://github.com/andreiavrammsd/polymap/actions/workflows/cmake.yml)
+
+[![bazel](https://github.com/andreiavrammsd/polymap/workflows/bazel/badge.svg)](https://github.com/andreiavrammsd/polymap/actions/workflows/bazel.yml)
 
 ### Polymorphic map container.
 
