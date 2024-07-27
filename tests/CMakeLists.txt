@@ -22,7 +22,7 @@ endif()
 include(${CPM_DOWNLOAD_LOCATION})
 
 # Testing framework
-CPMAddPackage("gh:google/googletest@1.12.0")
+CPMAddPackage("gh:google/googletest@1.15.0")
 
 # Test macro
 macro(package_add_test TESTNAME)

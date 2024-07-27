@@ -12,6 +12,6 @@ cc_test(
   copts = ["--std=c++17 -Wall -Wextra -Wpedantic -Werror"],
   deps = [
         ":poly_map",
-        "@gtest//:gtest_main",
+        "@googletest//:gtest_main",
     ],
 )
