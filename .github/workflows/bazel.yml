@@ -16,7 +16,7 @@ jobs:
           path: "~/.cache/bazel"
           key: bazel
 
-      - run: bazel test poly_map_test --test_output=all
+      - run: bazel coverage poly_map_test --test_output=all
 
       - name: Upload coverage reports to Codecov
         uses: codecov/codecov-action@v4.0.1
