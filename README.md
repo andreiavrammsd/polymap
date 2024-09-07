@@ -75,9 +75,3 @@ int main() {
 ```
 
 See [tests](tests/poly_map_test.cpp).
-
-<br>
-
-Developed with [CLion](https://www.jetbrains.com/?from=serializer)
-
-<a href="https://www.jetbrains.com/?from=serializer">![JetBrains](jetbrains.svg)</a>
