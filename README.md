@@ -4,6 +4,8 @@
 
 [![bazel](https://github.com/andreiavrammsd/polymap/workflows/bazel/badge.svg)](https://github.com/andreiavrammsd/polymap/actions/workflows/bazel.yml)
 
+[![codecov](https://codecov.io/github/andreiavrammsd/polymap/graph/badge.svg?token=CKSCACRJXC)](https://codecov.io/github/andreiavrammsd/polymap)
+
 ### Polymorphic map container.
 
 A recursive map that can have any shape and can hold multiple types for keys and values.
