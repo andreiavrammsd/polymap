@@ -1,0 +1,8 @@
+build --cxxopt=-std=c++17
+build -c dbg
+build --cxxopt=-Wall
+build --cxxopt=-Wextra
+build --cxxopt=-Wpedantic
+build --cxxopt=-Werror
+
+coverage --experimental_fetch_all_coverage_outputs
