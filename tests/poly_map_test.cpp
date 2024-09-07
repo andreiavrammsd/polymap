@@ -1,12 +1,12 @@
-#include <msd/poly_map.hpp>
+#include "msd/poly_map.hpp"
+
+#include <gtest/gtest.h>
 
 #include <any>
 #include <limits>
 #include <string>
 #include <tuple>
 #include <vector>
-
-#include <gtest/gtest.h>
 
 using poly_map_type = msd::poly_map<int, double, std::string>;
 
@@ -125,7 +125,7 @@ TEST_F(PolyMapTest, for_each)
     EXPECT_EQ((visitor.values[4].get<std::pair<int, int>>()), std::make_pair(1, 2));
     EXPECT_EQ(visitor.values[5].get<int>(), 199);
 
-    map_visitor visitor_for_const_map {};
+    map_visitor visitor_for_const_map{};
     const_map.for_each(visitor_for_const_map);
 
     EXPECT_EQ(visitor_for_const_map.keys.size(), 6);
