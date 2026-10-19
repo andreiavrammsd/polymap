@@ -17,6 +17,7 @@ RUN apt-get update && apt-get install -y \
     lldb \
     clang \
     clang-format \
+    lcov \
     llvm \
     software-properties-common \
     sudo \
