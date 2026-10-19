@@ -1,0 +1,25 @@
+module(name = "bazel_project")
+
+bazel_dep(name = "rules_cc", version = "0.2.22")
+
+http_archive = use_repo_rule(
+    "@bazel_tools//tools/build_defs/repo:http.bzl",
+    "http_archive",
+)
+
+http_archive(
+    name = "poly_map",
+    url = "https://github.com/andreiavrammsd/polymap/archive/refs/tags/v0.3.1.zip",
+    strip_prefix = "polymap-0.3.1",
+    integrity = "sha256-jLasrje/efTCU+hqhgu0TaTHHCh5m6ds7Lp9GM1nTlQ=",
+    build_file_content = """\
+load("@rules_cc//cc:defs.bzl", "cc_library")
+
+cc_library(
+    name = "poly_map",
+    hdrs = ["include/msd/poly_map.hpp"],
+    includes = ["include"],
+    visibility = ["//visibility:public"],
+)
+""",
+)
