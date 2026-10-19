@@ -18,7 +18,7 @@ jobs:
 
       - name: Run tests with coverage
         run: |
-          bazel coverage --combined_report=lcov --test_output=all //path/to:poly_map_test
+          bazel coverage --combined_report=lcov --test_output=all poly_map_test
 
       - name: Prepare coverage report
         run: |
