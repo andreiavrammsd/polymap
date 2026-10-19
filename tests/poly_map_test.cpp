@@ -109,7 +109,7 @@ TEST_F(PolyMapTest, for_each)
     map_visitor visitor{};
     map.for_each(visitor);
 
-    EXPECT_EQ(visitor.keys.size(), 6);
+    EXPECT_EQ(visitor.keys.size(), 6U);
     EXPECT_EQ(std::any_cast<int>(visitor.keys[0]), 1);
     EXPECT_EQ(std::any_cast<int>(visitor.keys[1]), 2);
     EXPECT_NEAR(std::any_cast<double>(visitor.keys[2]), 3.1, eps);
@@ -117,7 +117,7 @@ TEST_F(PolyMapTest, for_each)
     EXPECT_EQ(std::any_cast<std::string>(visitor.keys[4]), "g");
     EXPECT_EQ(std::any_cast<std::string>(visitor.keys[5]), "f");
 
-    EXPECT_EQ(visitor.values.size(), 6);
+    EXPECT_EQ(visitor.values.size(), 6U);
     EXPECT_EQ(visitor.values[0].get<std::string>(), "a");
     EXPECT_EQ(visitor.values[1].get<int>(), 8);
     EXPECT_EQ(visitor.values[2].get<int>(), 1);
@@ -128,8 +128,8 @@ TEST_F(PolyMapTest, for_each)
     map_visitor visitor_for_const_map{};
     const_map.for_each(visitor_for_const_map);
 
-    EXPECT_EQ(visitor_for_const_map.keys.size(), 6);
-    EXPECT_EQ(visitor_for_const_map.values.size(), 6);
+    EXPECT_EQ(visitor_for_const_map.keys.size(), 6U);
+    EXPECT_EQ(visitor_for_const_map.values.size(), 6U);
 }
 
 struct stop_visitor {
@@ -150,14 +150,14 @@ TEST_F(PolyMapTest, for_each_stop)
     stop_visitor visitor{};
     map.for_each(visitor);
 
-    EXPECT_EQ(visitor.key_count, 1);
-    EXPECT_EQ(visitor.value_count, 1);
+    EXPECT_EQ(visitor.key_count, 1U);
+    EXPECT_EQ(visitor.value_count, 1U);
 
     stop_visitor const_visitor{};
     const_map.for_each(const_visitor);
 
-    EXPECT_EQ(const_visitor.key_count, 1);
-    EXPECT_EQ(const_visitor.value_count, 1);
+    EXPECT_EQ(const_visitor.key_count, 1U);
+    EXPECT_EQ(const_visitor.value_count, 1U);
 }
 
 struct passed_map_visitor {
@@ -218,21 +218,21 @@ TEST_F(PolyMapTest, for_each_element)
     std::vector<std::any> keys;
 
     map[1][2][3.1].for_each(element_visitor{keys});
-    EXPECT_EQ(keys.size(), 3);
+    EXPECT_EQ(keys.size(), 3U);
     EXPECT_NEAR(std::any_cast<double>(keys[0]), 4.2, eps);
     EXPECT_EQ(std::any_cast<std::string>(keys[1]), "g");
     EXPECT_EQ(std::any_cast<std::string>(keys[2]), "f");
 
     keys.clear();
     map.at(1).at(2).at(3.1).for_each(element_visitor{keys});
-    EXPECT_EQ(keys.size(), 3);
+    EXPECT_EQ(keys.size(), 3U);
     EXPECT_NEAR(std::any_cast<double>(keys[0]), 4.2, eps);
     EXPECT_EQ(std::any_cast<std::string>(keys[1]), "g");
     EXPECT_EQ(std::any_cast<std::string>(keys[2]), "f");
 
     keys.clear();
     const_map.at(1).at(2).for_each(element_visitor{keys});
-    EXPECT_EQ(keys.size(), 4);
+    EXPECT_EQ(keys.size(), 4U);
     EXPECT_NEAR(std::any_cast<double>(keys[0]), 3.1, eps);
     EXPECT_NEAR(std::any_cast<double>(keys[1]), 4.2, eps);
     EXPECT_EQ(std::any_cast<std::string>(keys[2]), "g");
@@ -244,14 +244,14 @@ TEST_F(PolyMapTest, for_each_stop_element)
     stop_visitor visitor{};
     map[1].for_each(visitor);
 
-    EXPECT_EQ(visitor.key_count, 1);
-    EXPECT_EQ(visitor.value_count, 1);
+    EXPECT_EQ(visitor.key_count, 1U);
+    EXPECT_EQ(visitor.value_count, 1U);
 
     stop_visitor visitor_for_const_map{};
     const_map.for_each(visitor_for_const_map);
 
-    EXPECT_EQ(visitor_for_const_map.key_count, 1);
-    EXPECT_EQ(visitor_for_const_map.value_count, 1);
+    EXPECT_EQ(visitor_for_const_map.key_count, 1U);
+    EXPECT_EQ(visitor_for_const_map.value_count, 1U);
 }
 
 TEST_F(PolyMapTest, empty)
@@ -272,16 +272,16 @@ TEST_F(PolyMapTest, empty)
 
 TEST_F(PolyMapTest, size)
 {
-    EXPECT_EQ(map.size(), 6);
-    EXPECT_EQ(const_map.size(), 6);
-    EXPECT_EQ(map[999].size(), 0);
+    EXPECT_EQ(map.size(), 6U);
+    EXPECT_EQ(const_map.size(), 6U);
+    EXPECT_EQ(map[999].size(), 0U);
 
-    EXPECT_EQ(map[1][2][3.1].size(), 3);
-    EXPECT_EQ(const_map.at(1).at(2).at(3.1).size(), 3);
-    EXPECT_EQ(map.at(999).size(), 0);
+    EXPECT_EQ(map[1][2][3.1].size(), 3U);
+    EXPECT_EQ(const_map.at(1).at(2).at(3.1).size(), 3U);
+    EXPECT_EQ(map.at(999).size(), 0U);
 
     msd::poly_map<int> empty_map;
-    EXPECT_EQ(empty_map.size(), 0);
+    EXPECT_EQ(empty_map.size(), 0U);
 }
 
 TEST_F(PolyMapTest, clear)

@@ -5,23 +5,30 @@ on:
 
 jobs:
   bazel:
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-26.04
 
     steps:
-      - uses: actions/checkout@v3
-      - uses: bazelbuild/setup-bazelisk@v2
+      - uses: actions/checkout@v4
+      - uses: bazelbuild/setup-bazelisk@v3
       - name: Mount bazel cache
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         with:
           path: "~/.cache/bazel"
           key: bazel
 
-      - run: bazel coverage poly_map_test --test_output=all
-
-      - name: Coverage
+      - name: Run tests with coverage
         run: |
-          sudo apt install -y lcov \
-          && lcov --capture --directory $(bazel info bazel-testlogs)/poly_map_test/ --output-file coverage.info
+          bazel coverage --combined_report=lcov --test_output=all poly_map_test
+
+      - name: Prepare coverage report
+        run: |
+          sudo apt-get install -y lcov
+          lcov --remove bazel-out/_coverage/_coverage_report.dat --ignore-errors unused \
+            '/usr/*' \
+            '*/external/*' \
+            '*/bazel-out/*' \
+            '*/c++/*' \
+            --output-file coverage.info
 
       - name: Upload coverage reports to Codecov
         uses: codecov/codecov-action@v4.0.1

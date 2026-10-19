@@ -1,3 +1,5 @@
+load("@rules_cc//cc:defs.bzl", "cc_library", "cc_test")
+
 cc_library(
     name = "poly_map",
     hdrs = ["include/msd/poly_map.hpp"],
@@ -6,11 +8,11 @@ cc_library(
 )
 
 cc_test(
-  name = "poly_map_test",
-  size = "small",
-  srcs = ["tests/poly_map_test.cpp"],
-  copts = ["--std=c++17 -Wall -Wextra -Wpedantic -Werror"],
-  deps = [
+    name = "poly_map_test",
+    size = "small",
+    srcs = ["tests/poly_map_test.cpp"],
+    copts = ["-std=c++17", "-Wall", "-Wextra", "-Wpedantic", "-Werror"],
+    deps = [
         ":poly_map",
         "@googletest//:gtest_main",
     ],
