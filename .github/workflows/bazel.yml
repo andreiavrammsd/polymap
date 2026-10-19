@@ -19,14 +19,19 @@ jobs:
       - name: Run tests with coverage
         run: bazel coverage --combined_report=lcov poly_map_test --test_output=all
 
-      - name: Coverage
-        run: |
-          sudo apt install -y lcov \
-          && lcov --capture --directory $(bazel info bazel-testlogs)/poly_map_test/ --output-file coverage.info
-
       - name: Prepare coverage report
         run: |
-          cp "$(bazel info output_path)/_coverage/_coverage_report.dat" coverage.info
+          set -eux
+          output_path="$(bazel info output_path)"
+          report="${output_path}/_coverage/_coverage_report.dat"
+
+          if [ ! -f "$report" ]; then
+            echo "Coverage report not found: $report" >&2
+            find "$output_path" -name '*coverage*' -type f
+            exit 1
+          fi
+
+          cp "$report" coverage.info
 
       - name: Upload coverage reports to Codecov
         uses: codecov/codecov-action@v4.0.1
