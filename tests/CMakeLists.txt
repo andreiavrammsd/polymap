@@ -22,12 +22,17 @@ endif()
 include(${CPM_DOWNLOAD_LOCATION})
 
 # Testing framework
-CPMAddPackage("gh:google/googletest@1.15.0")
+CPMAddPackage("gh:google/googletest@1.18.0")
 
 # Test macro
 macro(package_add_test TESTNAME)
     add_executable(${TESTNAME} ${ARGN})
-    target_link_libraries(${TESTNAME} gtest gtest_main)
+    set_target_properties(${TESTNAME} PROPERTIES
+        CXX_STANDARD 17
+        CXX_STANDARD_REQUIRED YES
+        CXX_EXTENSIONS NO
+    )
+    target_link_libraries(${TESTNAME} PRIVATE msd_poly_map gtest gtest_main)
     add_test(NAME ${TESTNAME} COMMAND ${TESTNAME})
 endmacro()
 
