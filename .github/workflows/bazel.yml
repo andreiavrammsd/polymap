@@ -17,7 +17,12 @@ jobs:
           key: bazel
 
       - name: Run tests with coverage
-        run: bazel coverage --combined_report=lcov poly_map_test --test_output=all
+        run: |
+          bazel coverage \
+            --combined_report=lcov \
+            --instrumentation_filter='//.*' \
+            poly_map_test \
+            --test_output=all
 
       - name: Prepare coverage report
         run: |
