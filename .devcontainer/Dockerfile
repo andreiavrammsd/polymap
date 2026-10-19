@@ -36,17 +36,22 @@ RUN curl -fsSL \
     -o /usr/local/bin/buildifier \
     && chmod +x /usr/local/bin/buildifier
 
+# Install CMake
+RUN wget https://cmake.org/files/v3.22/cmake-3.22.6-linux-x86_64.sh \
+    && chmod +x cmake-3.22.6-linux-x86_64.sh \
+    && sudo ./cmake-3.22.6-linux-x86_64.sh --prefix=/usr/local --skip-license
+
 # Create a non-root user
 ARG USERNAME=vscode
 ARG USER_UID=1000
 ARG USER_GID=$USER_UID
 
 RUN usermod --login ${USERNAME} --home /home/${USERNAME} --move-home $(getent passwd ${USER_UID} | cut -d: -f1) \
-    && usermod --gid ${USER_GID} ${USERNAME}
-
-RUN wget https://cmake.org/files/v3.22/cmake-3.22.6-linux-x86_64.sh \
-    && chmod +x cmake-3.22.6-linux-x86_64.sh \
-    && sudo ./cmake-3.22.6-linux-x86_64.sh --prefix=/usr/local --skip-license
+    && usermod --gid ${USER_GID} ${USERNAME} \
+    && passwd -d ${USERNAME} \
+    && printf '%s ALL=(ALL) NOPASSWD:ALL\n' "${USERNAME}" > "/etc/sudoers.d/${USERNAME}" \
+    && chmod 0440 "/etc/sudoers.d/${USERNAME}" \
+    && visudo -cf "/etc/sudoers.d/${USERNAME}"
 
 # Set the user to vscode
 USER $USERNAME
